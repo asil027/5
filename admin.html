@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | AURA Coffee Roasters</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="admin.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d49746'><path d='M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm1 14.93V18h-2v-1.07A4.002 4.002 0 0 1 8 13h2a2 2 0 1 0 4 0c0-1.1-.9-2-2-2a4 4 0 0 1-4-4 4.002 4.002 0 0 1 3-3.93V2h2v1.07A4.002 4.002 0 0 1 16 7h-2a2 2 0 1 0-4 0c0 1.1.9 2 2 2a4 4 0 0 1 4 4c0 1.61-1 2.98-2 3.93z'/></svg>">
+</head>
+<body>
+
+  <!-- Top Admin Navbar -->
+  <header class="admin-topbar">
+    <div class="topbar-left">
+      <div class="admin-brand">
+        <div class="brand-icon">☕</div>
+        <div class="brand-info">
+          <span class="brand-title">AURA</span>
+          <span class="brand-sub">BARISTA & ADMIN PORTAL</span>
+        </div>
+      </div>
+      <div class="cafe-location-badge">
+        📍 Saifabad No. 1, Street 15, Faisalabad
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <div class="live-clock-pill">
+        <span class="clock-icon">🕒</span>
+        <span id="adminLiveClock">--:-- PKT</span>
+      </div>
+
+      <!-- Live Cafe Status Override -->
+      <div class="cafe-toggle-wrap">
+        <span class="toggle-label">Cafe State:</span>
+        <button id="toggleCafeStatusBtn" class="status-toggle-btn open" title="Click to override cafe status">
+          <span class="status-indicator"></span>
+          <span id="cafeToggleText">OPEN (Accepting Orders)</span>
+        </button>
+      </div>
+
+      <!-- Quick Link to Customer Storefront -->
+      <a href="/" target="_blank" class="btn-storefront" title="Open customer website in a new tab">
+        <span>View Customer Storefront</span>
+        <svg viewBox="0 0 24 24" class="external-icon" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+          <polyline points="15 3 21 3 21 9"/>
+          <line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <div class="admin-layout">
+    <!-- Main Content Area -->
+    <main class="admin-main">
+
+      <!-- KPI Summary Cards -->
+      <section class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Today's Revenue</span>
+            <span class="kpi-icon-wrap gold-icon">💰</span>
+          </div>
+          <div class="kpi-value" id="kpiRevenue">Rs. 3,720</div>
+          <div class="kpi-sub positive">
+            <span>↑ 18.4%</span> vs yesterday
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Total Orders</span>
+            <span class="kpi-icon-wrap blue-icon">📋</span>
+          </div>
+          <div class="kpi-value" id="kpiTotalOrders">3 Orders</div>
+          <div class="kpi-sub">
+            <span>All Channels</span> (WhatsApp, In-Store, Web)
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Active / Brewing</span>
+            <span class="kpi-icon-wrap amber-icon">⏳</span>
+          </div>
+          <div class="kpi-value" id="kpiActiveOrders">1 Order</div>
+          <div class="kpi-sub highlight">
+            <span>Under preparation</span> at espresso bar
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-header">
+            <span class="kpi-title">Top-Selling Brew</span>
+            <span class="kpi-icon-wrap green-icon">⭐</span>
+          </div>
+          <div class="kpi-value" style="font-size: 1.45rem;">Caramel Coffee</div>
+          <div class="kpi-sub">
+            <span>Rs. 500</span> • Followed by Vanilla Latte (Rs. 600)
+          </div>
+        </div>
+      </section>
+
+      <!-- Orders Management Section -->
+      <section class="admin-section">
+        <div class="section-top-bar">
+          <div class="section-heading-wrap">
+            <h2>Live Orders Feed</h2>
+            <p>Real-time customer orders placed via website, WhatsApp, and email.</p>
+          </div>
+
+          <div class="order-controls">
+            <!-- Search Input -->
+            <div class="search-input-wrap">
+              <svg viewBox="0 0 24 24" class="search-icon" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              <input type="text" id="orderSearchInput" placeholder="Search customer, phone, or coffee...">
+            </div>
+
+            <!-- Refresh Button -->
+            <button id="refreshOrdersBtn" class="btn-refresh" title="Reload orders">
+              <svg viewBox="0 0 24 24" class="refresh-icon" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 4v6h-6"/>
+                <path d="M1 20v-6h6"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+              <span>Refresh</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Order Filter Tabs -->
+        <div class="order-tabs">
+          <button class="order-tab active" data-status="all">All Orders (<span id="countAll">3</span>)</button>
+          <button class="order-tab" data-status="Pending">Pending (<span id="countPending">0</span>)</button>
+          <button class="order-tab" data-status="Brewing">Brewing (<span id="countBrewing">1</span>)</button>
+          <button class="order-tab" data-status="Ready for Pickup">Ready for Pickup (<span id="countReady">1</span>)</button>
+          <button class="order-tab" data-status="Delivered">Completed / Delivered (<span id="countDelivered">1</span>)</button>
+        </div>
+
+        <!-- Orders Table / Feed -->
+        <div class="orders-table-wrapper">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Order ID & Time</th>
+                <th>Customer Info</th>
+                <th>Order Type & Destination</th>
+                <th>Item & Customization</th>
+                <th>Qty & Total</th>
+                <th>Status Action</th>
+                <th>WhatsApp Action</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+              <!-- Dynamically rendered -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Menu Items & Inventory Management -->
+      <section class="admin-section">
+        <div class="section-top-bar">
+          <div class="section-heading-wrap">
+            <h2>Specialty Menu & Price Management</h2>
+            <p>Control pricing, add new drinks, remove items, or toggle in-stock availability.</p>
+          </div>
+          <button id="openAddDrinkModalBtn" class="btn-storefront" style="cursor: pointer; border: none;">
+            <span>➕ Add New Drink</span>
+          </button>
+        </div>
+
+        <div class="menu-admin-grid" id="menuAdminGrid">
+          <!-- Dynamically populated by admin.js from /api/menu -->
+        </div>
+      </section>
+
+      <!-- Add New Drink Modal Dialog -->
+      <dialog id="addDrinkModal" class="admin-dialog">
+        <div class="admin-modal-card">
+          <div class="modal-header">
+            <h3>Add New Drink to Menu</h3>
+            <button id="closeAddDrinkModalBtn" class="modal-close">&times;</button>
+          </div>
+          <form id="addDrinkForm" onsubmit="return false;" class="admin-form">
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Drink Name *</label>
+                <input type="text" id="newDrinkName" placeholder="e.g. Hazelnut Mocha" required>
+              </div>
+              <div class="form-group">
+                <label>Price in PKR (Rs.) *</label>
+                <input type="number" id="newDrinkPrice" placeholder="e.g. 750" required>
+              </div>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Category</label>
+                <select id="newDrinkCategory">
+                  <option value="espresso">Espresso & Milk</option>
+                  <option value="iced">Cold Craft / Iced</option>
+                  <option value="featured espresso">Featured Classic</option>
+                  <option value="beans">Specialty Coffee Beans</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Badge / Highlight Tag</label>
+                <input type="text" id="newDrinkBadge" placeholder="e.g. ⭐ New Arrival or 🔥 Special">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Description</label>
+              <textarea id="newDrinkDesc" rows="2" placeholder="e.g. Rich espresso with toasted hazelnut syrup and cocoa microfoam..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Select Presentation Image</label>
+              <select id="newDrinkImage">
+                <option value="assets/images/vanilla-latte.jpg">Vanilla Latte Ceramic Art (Hot / Classic)</option>
+                <option value="assets/images/caramel-coffee.jpg">Caramel Layered Glass (Iced / Sweet)</option>
+                <option value="assets/images/ethiopia-beans.jpg">Artisanal Coffee Beans & Roastery</option>
+                <option value="assets/images/aura-hero.jpg">Barista Espresso Machine Ambiance</option>
+              </select>
+              <input type="text" id="newDrinkCustomImage" placeholder="Or enter custom image URL / path (e.g. assets/images/your-drink.jpg)" style="margin-top: 0.5rem; width: 100%; padding: 0.55rem 0.75rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(212,151,70,0.3); border-radius: 8px; color: #fff; font-size: 0.85rem;">
+            </div>
+
+            <div class="modal-actions">
+              <button type="button" id="cancelAddDrinkBtn" class="btn-cancel">Cancel</button>
+              <button type="submit" id="submitAddDrinkBtn" class="btn-storefront">Save & Add to Menu</button>
+            </div>
+          </form>
+        </div>
+      </dialog>
+
+      <!-- Cafe Settings & Operational Details -->
+      <section class="admin-section">
+        <div class="section-top-bar">
+          <div class="section-heading-wrap">
+            <h2>Cafe Operations & Location Specs</h2>
+            <p>Operational hours, customer hotline, and location profile.</p>
+          </div>
+        </div>
+
+        <div class="settings-card-grid">
+          <div class="settings-card">
+            <h4>📅 Opening Hours Schedule</h4>
+            <ul>
+              <li><strong>Monday – Saturday:</strong> 11:00 AM – 10:00 PM PKT</li>
+              <li><strong>Sunday:</strong> Closed (Weekly Roaster Maintenance)</li>
+            </ul>
+          </div>
+
+          <div class="settings-card">
+            <h4>📍 Faisalabad Roastery Address</h4>
+            <p>Street 15, Saifabad No. 1, Faisalabad, Punjab, Pakistan</p>
+            <small>Interactive Google Map embedded on customer site</small>
+          </div>
+
+          <div class="settings-card">
+            <h4>📱 WhatsApp Hotline & Inquiries</h4>
+            <p><strong>Hotline:</strong> +92 300 1234567</p>
+            <p><strong>Support Email:</strong> info@auraroasters.com</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="admin.js"></script>
+</body>
+</html>

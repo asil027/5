@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AURA Coffee Roasters | Artisanal Specialty Coffee & Roastery</title>
+  <meta name="description" content="Experience handcrafted specialty coffee, master latte art, and single-origin roasts at AURA Coffee Roasters. Located at Saifabad No. 1, Faisalabad. Order online via WhatsApp or Email.">
+  <meta name="keywords" content="coffee, Faisalabad cafe, specialty coffee, vanilla latte, caramel coffee, artisanal coffee, Aura Coffee Roasters, Saifabad">
+  <meta property="og:title" content="AURA Coffee Roasters | Artisanal Specialty Coffee">
+  <meta property="og:description" content="Handcrafted specialty coffee, signature Vanilla Latte & Caramel Coffee. Visit us in Saifabad No. 1, Street 15, Faisalabad.">
+  <meta property="og:type" content="website">
+  
+  <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23d49746'><path d='M2 21h18v-2H2v2M20 8h-2V5h2m0-2H4v10a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4v-3h2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2Z'/></svg>">
+</head>
+<body>
+
+  <!-- Top Announcement Bar -->
+  <div class="announcement-bar">
+    <div class="container announcement-content">
+      <div class="live-status-pill" id="liveStatusPill">
+        <span class="status-dot"></span>
+        <span id="statusText">Checking cafe hours...</span>
+      </div>
+      <div class="announcement-promo">
+        <span>✨ Handcrafted with 100% Single-Origin Beans</span>
+        <span class="announcement-divider">•</span>
+        <span>📍 Street 15, Saifabad No. 1, Faisalabad</span>
+      </div>
+      <div class="announcement-hours">
+        <span>Mon–Sat: 11:00 AM – 10:00 PM</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Navigation Bar -->
+  <header class="site-header" id="navbar">
+    <div class="container nav-container">
+      <a href="#hero" class="brand-logo" aria-label="Aura Coffee Roasters Home">
+        <div class="logo-emblem">
+          <svg viewBox="0 0 32 32" class="coffee-bean-icon" fill="currentColor">
+            <path d="M16 3C8.82 3 3 8.82 3 16s5.82 13 13 13 13-5.82 13-13S23.18 3 16 3zm0 2c6.1 0 11.1 4.3 11.9 10-2.3.4-5.3 1.8-7.7 4.5-2.6 2.9-4.2 6.6-4.2 6.6S14.4 20.3 12 17.5C9.6 14.8 6.6 13.4 4.1 13 4.9 7.3 9.9 3 16 3zm0 22c-.6 0-1.2-.1-1.8-.2.5-1.4 1.7-4 3.6-6.2 2.1-2.4 4.7-3.6 6.8-4 1.2 5.5-2.2 10.4-8.6 10.4z"/>
+          </svg>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">AURA</span>
+          <span class="logo-subtitle">COFFEE ROASTERS</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="nav-links" id="navLinks">
+        <a href="#hero" class="nav-link active">Home</a>
+        <a href="#menu" class="nav-link">Our Menu</a>
+        <a href="#about" class="nav-link">Our Craft</a>
+        <a href="#hours-location" class="nav-link">Hours & Location</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </nav>
+
+      <!-- Header Action Group -->
+      <div class="nav-actions">
+        <!-- Audio Ambient Cafe Toggle Button -->
+        <button id="ambientAudioBtn" class="ambient-audio-btn" title="Toggle cozy cafe ambient sound" aria-label="Toggle cafe ambiance">
+          <svg class="audio-icon audio-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+            <line x1="23" y1="9" x2="17" y2="15"/>
+            <line x1="17" y1="9" x2="23" y2="15"/>
+          </svg>
+          <svg class="audio-icon audio-playing" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+          </svg>
+          <span class="audio-label">Ambiance</span>
+        </button>
+
+        <button class="btn btn-outline" id="headerOrderBtn" onclick="openOrderModal('Caramel Coffee', 800)">
+          <span>Order Now</span>
+        </button>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button class="mobile-toggle-btn" id="mobileMenuBtn" aria-label="Toggle navigation menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-drawer" id="mobileDrawer">
+    <div class="mobile-drawer-header">
+      <div class="logo-text">
+        <span class="logo-title">AURA</span>
+        <span class="logo-subtitle">COFFEE ROASTERS</span>
+      </div>
+      <button class="drawer-close-btn" id="drawerCloseBtn" aria-label="Close menu">&times;</button>
+    </div>
+    <nav class="mobile-nav-links">
+      <a href="#hero" class="mobile-nav-link">Home</a>
+      <a href="#menu" class="mobile-nav-link">Signature Menu</a>
+      <a href="#about" class="mobile-nav-link">The Roastery Story</a>
+      <a href="#hours-location" class="mobile-nav-link">Hours & Location</a>
+      <a href="#contact" class="mobile-nav-link">Contact & Map</a>
+    </nav>
+    <div class="mobile-drawer-footer">
+      <button class="btn btn-primary btn-block" onclick="openOrderModal('Vanilla Latte', 600)">
+        <span>Order Coffee Now</span>
+      </button>
+      <div class="drawer-contact-info">
+        <p>📍 Saifabad No. 1, Street 15, Faisalabad</p>
+        <p>🕒 Mon-Sat: 11 AM - 10 PM (Closed Sun)</p>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero-section" id="hero">
+      <div class="hero-bg-wrapper">
+        <img src="assets/images/aura-hero.jpg" alt="Aura Coffee Roasters Barista crafting specialty coffee on professional espresso machine" class="hero-bg-img" fetchpriority="high">
+        <div class="hero-overlay"></div>
+      </div>
+
+      <div class="container hero-content">
+        <div class="hero-badge fade-in-element">
+          <span class="badge-sparkle">✦</span>
+          <span>Faisalabad's Premier Specialty Roasters</span>
+        </div>
+
+        <h1 class="hero-title fade-in-element">
+          Artisanal Coffee Crafted with <span class="text-gold italic">Passion & Precision</span>
+        </h1>
+
+        <p class="hero-description fade-in-element">
+          Step into a sanctuary of rich aromas and uncompromising flavor. From micro-lot Ethiopian beans roasted fresh in-house to silk-smooth velvet lattes, every pour at <strong>Aura</strong> is an experience to savor.
+        </p>
+
+        <!-- CTA Action Buttons -->
+        <div class="hero-cta-group fade-in-element">
+          <a href="#menu" class="btn btn-primary hero-btn">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+              <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+              <line x1="6" y1="1" x2="6" y2="4"/>
+              <line x1="10" y1="1" x2="10" y2="4"/>
+              <line x1="14" y1="1" x2="14" y2="4"/>
+            </svg>
+            <span>View Menu</span>
+          </a>
+
+          <button class="btn btn-gold hero-btn" onclick="openOrderModal('Vanilla Latte', 600)">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 11V7a4 4 0 0 0-8 0v4M5 9h14l1 12H4L5 9z"/>
+            </svg>
+            <span>Order Now</span>
+          </button>
+        </div>
+
+        <!-- Hero Highlights Strip -->
+        <div class="hero-features-strip fade-in-element">
+          <div class="feature-item">
+            <div class="feature-icon">🌿</div>
+            <div class="feature-text">
+              <strong>100% Specialty Arabica</strong>
+              <span>Ethically sourced single origins</span>
+            </div>
+          </div>
+          <div class="feature-divider"></div>
+          <div class="feature-item">
+            <div class="feature-icon">🔥</div>
+            <div class="feature-text">
+              <strong>Fresh Micro Roasting</strong>
+              <span>Roasted in small curated batches</span>
+            </div>
+          </div>
+          <div class="feature-divider"></div>
+          <div class="feature-item">
+            <div class="feature-icon">☕</div>
+            <div class="feature-text">
+              <strong>Award Latte Art</strong>
+              <span>Poured by certified master baristas</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll Down Indicator -->
+      <a href="#menu" class="scroll-down-indicator" aria-label="Scroll to menu">
+        <span class="scroll-mouse">
+          <span class="scroll-wheel"></span>
+        </span>
+        <span class="scroll-text">Explore Menu</span>
+      </a>
+    </section>
+
+    <!-- SECTION: OUR SPECIALTY MENU -->
+    <section class="section menu-section" id="menu">
+      <div class="container">
+        <!-- Section Header -->
+        <div class="section-header text-center reveal-on-scroll">
+          <div class="section-tag">
+            <span class="tag-line"></span>
+            <span>Handcrafted Brews</span>
+            <span class="tag-line"></span>
+          </div>
+          <h2 class="section-title">Signature Menu & Roasts</h2>
+          <p class="section-subtitle">
+            Every cup is dialed into exacting grind profiles and calibrated extraction ratios for supreme depth and velvety texture.
+          </p>
+        </div>
+
+        <!-- Menu Category Filter Tabs -->
+        <div class="menu-filters reveal-on-scroll">
+          <button class="filter-btn active" data-category="all">All Creations</button>
+          <button class="filter-btn" data-category="featured">⭐ Featured Classics</button>
+          <button class="filter-btn" data-category="espresso">Espresso & Milk</button>
+          <button class="filter-btn" data-category="beans">Specialty Beans</button>
+          <button class="filter-btn" data-category="iced">Cold Craft</button>
+        </div>
+
+        <!-- Menu Grid -->
+        <div class="menu-grid" id="menuGrid">
+
+          <!-- ITEM 1: VANILLA LATTE -->
+          <article class="coffee-card featured-card reveal-on-scroll" data-category="featured espresso" data-id="drink-1">
+            <div class="card-badge-wrapper">
+              <span class="card-badge gold-badge">⭐ Customer Favorite</span>
+            </div>
+            <div class="card-image-box">
+              <img src="assets/images/vanilla-latte.jpg" alt="Vanilla Latte handcrafted with silky rosetta latte art in artisan ceramic cup" class="card-img" loading="lazy" onerror="this.src='assets/images/vanilla-latte.jpg'">
+              <div class="card-image-overlay">
+                <button class="quick-view-btn" onclick="openOrderModal('Vanilla Latte', 600)">Quick Order</button>
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="card-header-row">
+                <h3 class="card-title">Vanilla Latte</h3>
+                <div class="card-price">Rs. 600</div>
+              </div>
+              
+              <!-- 5-Star Customer Rating Display -->
+              <div class="card-rating" aria-label="5 star customer rating">
+                <div class="stars-display">
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                </div>
+                <span class="rating-text">5.0 (148 reviews)</span>
+              </div>
+
+              <p class="card-desc">
+                Double shot of espresso combined with steamed velvety microfoam, infused with pure Madagascar vanilla extract and finished with master rosetta latte art.
+              </p>
+
+              <div class="card-tags">
+                <span class="mini-tag">Espresso</span>
+                <span class="mini-tag">Madagascar Vanilla</span>
+                <span class="mini-tag">Velvet Milk</span>
+              </div>
+
+              <div class="card-footer">
+                <button class="btn btn-card-order" onclick="openOrderModal('Vanilla Latte', 600)">
+                  <svg class="order-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M5 12h14"/>
+                  </svg>
+                  <span>Order Now</span>
+                </button>
+              </div>
+            </div>
+          </article>
+
+          <!-- ITEM 2: CARAMEL COFFEE -->
+          <article class="coffee-card featured-card reveal-on-scroll" data-category="featured iced espresso" data-id="drink-2">
+            <div class="card-badge-wrapper">
+              <span class="card-badge bestseller-badge">🔥 Bestseller</span>
+            </div>
+            <div class="card-image-box">
+              <img src="assets/images/caramel-coffee.jpg" alt="Caramel Coffee Macchiato layered with espresso, cold foam, and golden caramel sauce drizzle" class="card-img" loading="lazy" onerror="this.src='assets/images/vanilla-latte.jpg'">
+              <div class="card-image-overlay">
+                <button class="quick-view-btn" onclick="openOrderModal('Caramel Coffee', 500)">Quick Order</button>
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="card-header-row">
+                <h3 class="card-title">Caramel Coffee</h3>
+                <div class="card-price">Rs. 500</div>
+              </div>
+
+              <!-- 5-Star Customer Rating Display -->
+              <div class="card-rating" aria-label="5 star customer rating">
+                <div class="stars-display">
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                  <span class="star-icon">★</span>
+                </div>
+                <span class="rating-text">5.0 (192 reviews)</span>
+              </div>
+
+              <p class="card-desc">
+                Artisanal layered macchiato featuring sweet cream milk, fresh espresso cascade, and decadent house-crafted butter caramel drizzle with crunchy roasted bean crumble.
+              </p>
+
+              <div class="card-tags">
+                <span class="mini-tag">Artisan Caramel</span>
+                <span class="mini-tag">Cold / Hot</span>
+                <span class="mini-tag">Layered Macchiato</span>
+              </div>
+
+              <div class="card-footer">
+                <button class="btn btn-card-order" onclick="openOrderModal('Caramel Coffee', 500)">
+                  <svg class="order-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 5v14M5 12h14"/>
+                  </svg>
+                  <span>Order Now</span>
+                </button>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- Banner for customized orders -->
+        <div class="custom-order-banner reveal-on-scroll">
+          <div class="banner-content">
+            <div class="banner-icon">✨</div>
+            <div class="banner-text">
+              <h4>Craving a Custom Blend or Alternative Milk?</h4>
+              <p>We offer Oat Milk, Almond Milk, sugar-free syrups, decaf roasts, and custom brew temperatures in our ordering modal.</p>
+            </div>
+          </div>
+          <button class="btn btn-gold banner-btn" onclick="openOrderModal('Caramel Coffee', 500)">
+            <span>Customize Your Cup</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: OUR CRAFT / ABOUT AURA -->
+    <section class="section about-section" id="about">
+      <div class="container">
+        <div class="about-grid">
+          <div class="about-visual reveal-on-scroll">
+            <div class="about-img-frame">
+              <img src="assets/images/aura-hero.jpg" alt="Inside Aura Coffee Roasters Cafe" class="about-main-img">
+              <div class="experience-badge">
+                <span class="exp-number">100%</span>
+                <span class="exp-text">Specialty Grade Arabica</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="about-text-content reveal-on-scroll">
+            <div class="section-tag">
+              <span class="tag-line"></span>
+              <span>The Art of Coffee</span>
+            </div>
+            <h2 class="section-title">Rooted in Passion, Defined by Craft</h2>
+            <p class="about-lead">
+              At <strong>AURA Coffee Roasters</strong>, coffee is never an afterthought—it is a culinary devotion.
+            </p>
+            <p class="about-body">
+              Located in the heart of Faisalabad at Saifabad No. 1, our roastery was born out of a desire to elevate everyday coffee into an artisanal sensory journey. Every bean is carefully evaluated, small-batch roasted on calibrated drums, and extracted at precise water temperatures and pressures.
+            </p>
+
+            <div class="craft-points">
+              <div class="craft-point">
+                <div class="craft-icon">☕</div>
+                <div class="craft-info">
+                  <h5>Micro-Lot Roasting</h5>
+                  <p>Roasted weekly in small quantities to ensure optimum peak degassing and unmatched aromatic vitality.</p>
+                </div>
+              </div>
+              <div class="craft-point">
+                <div class="craft-icon">🥛</div>
+                <div class="craft-info">
+                  <h5>Microfoam Perfection</h5>
+                  <p>Steamed to silky sweet microfoam that delivers a velvety mouthfeel and stunning free-pour latte art.</p>
+                </div>
+              </div>
+              <div class="craft-point">
+                <div class="craft-icon">🤝</div>
+                <div class="craft-info">
+                  <h5>Warm & Welcoming Sanctuary</h5>
+                  <p>Cozy ambient lighting, warm oak counters, and a relaxing playlist make Aura your favorite sanctuary.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="about-cta-row">
+              <a href="#hours-location" class="btn btn-outline">
+                <span>Find Our Roastery</span>
+              </a>
+              <button class="btn btn-gold" onclick="openOrderModal('Vanilla Latte', 600)">
+                <span>Taste the Craft</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: HOURS & LOCATION (CRITICAL REQUIREMENTS) -->
+    <section class="section hours-location-section" id="hours-location">
+      <div class="container">
+        <!-- Section Header -->
+        <div class="section-header text-center reveal-on-scroll">
+          <div class="section-tag">
+            <span class="tag-line"></span>
+            <span>Visit Aura</span>
+            <span class="tag-line"></span>
+          </div>
+          <h2 class="section-title">Hours & Location</h2>
+          <p class="section-subtitle">
+            Join us for your morning ritual, an afternoon business catch-up, or evening unwind.
+          </p>
+        </div>
+
+        <div class="info-layout-grid">
+          <!-- Wooden Plaque Inspired Info Card (Directly reflecting the wooden cafe board in reference) -->
+          <div class="wooden-board-card reveal-on-scroll">
+            <div class="wooden-board-inner">
+              <div class="wooden-board-header">
+                <div class="wood-brand-logo">
+                  <span class="wood-brand-name">AURA</span>
+                  <span class="wood-brand-sub">COFFEE ROASTERS</span>
+                </div>
+                <div class="wood-title-bar">
+                  <h3>OUR HOURS & LOCATION</h3>
+                </div>
+              </div>
+
+              <!-- Live Status Pill in Wooden Board -->
+              <div class="live-clock-card" id="realtimeStatusCard">
+                <div class="status-indicator-ring">
+                  <span class="status-indicator-dot"></span>
+                </div>
+                <div class="live-clock-info">
+                  <strong id="liveStatusHeadline">Checking Hours...</strong>
+                  <span id="liveStatusSub">Cafe Time: <span id="faisalabadTime">--:--</span> PKT</span>
+                </div>
+              </div>
+
+              <div class="wood-info-list">
+                <!-- Business Hours Item -->
+                <div class="wood-info-item">
+                  <div class="wood-icon-circle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                  </div>
+                  <div class="wood-item-details">
+                    <span class="item-label">Opening Hours</span>
+                    <strong class="item-value">Mon – Sat: 11:00 AM – 10:00 PM</strong>
+                    <span class="item-sub closed-badge">Closed on Sunday</span>
+                  </div>
+                </div>
+
+                <!-- Location Address Item -->
+                <div class="wood-info-item">
+                  <div class="wood-icon-circle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                      <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                  </div>
+                  <div class="wood-item-details">
+                    <span class="item-label">Address</span>
+                    <strong class="item-value">Street 15, Saifabad No. 1, Faisalabad</strong>
+                    <span class="item-sub">Easy street parking available</span>
+                  </div>
+                </div>
+
+                <!-- WhatsApp Contact Item -->
+                <div class="wood-info-item">
+                  <div class="wood-icon-circle whatsapp-circle">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.16 12.04 20.16C10.61 20.16 9.22 19.78 8 19.06L7.71 18.89L4.59 19.71L5.42 16.67L5.23 16.37C4.44 15.11 4.02 13.64 4.02 11.91C4.02 7.37 7.72 3.67 12.05 3.67M9.27 7.22C9.07 7.22 8.87 7.23 8.68 7.3C8.49 7.36 8.28 7.56 8.16 7.7C7.79 8.13 7.27 8.88 7.27 10.31C7.27 11.74 8.31 13.12 8.46 13.31C8.61 13.5 10.45 16.49 13.36 17.65C15.78 18.61 16.27 18.42 16.8 18.37C17.33 18.32 18.52 17.67 18.77 16.98C19.02 16.29 19.02 15.7 18.95 15.58C18.88 15.46 18.68 15.39 18.38 15.24C18.08 15.09 16.61 14.37 16.34 14.27C16.07 14.17 15.87 14.12 15.67 14.42C15.47 14.72 14.9 15.39 14.73 15.58C14.56 15.77 14.39 15.8 14.09 15.65C13.79 15.5 12.83 15.19 11.69 14.17C10.8 13.38 10.2 12.4 10.05 12.15C9.9 11.9 10.03 11.77 10.18 11.62C10.32 11.49 10.48 11.27 10.63 11.1C10.78 10.93 10.83 10.81 10.93 10.61C11.03 10.41 10.98 10.24 10.91 10.09C10.84 9.94 10.25 8.48 10 7.89C9.76 7.32 9.51 7.4 9.32 7.39L9.27 7.22Z"/>
+                    </svg>
+                  </div>
+                  <div class="wood-item-details">
+                    <span class="item-label">WhatsApp Quick Inquiries</span>
+                    <a href="https://wa.me/923001234567" target="_blank" rel="noopener noreferrer" class="item-link" id="whatsAppLinkText">
+                      +92 300 1234567
+                    </a>
+                    <span class="item-sub">Instant response during opening hours</span>
+                  </div>
+                </div>
+
+                <!-- Email Contact Item -->
+                <div class="wood-info-item">
+                  <div class="wood-icon-circle email-circle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                      <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                  </div>
+                  <div class="wood-item-details">
+                    <span class="item-label">Email Support & Orders</span>
+                    <a href="mailto:info@auraroasters.com" class="item-link">
+                      info@auraroasters.com
+                    </a>
+                    <span class="item-sub">Corporate inquiries & bulk coffee orders</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick action buttons on wooden board -->
+              <div class="wood-actions">
+                <a href="https://wa.me/923001234567?text=Hello%20Aura%20Coffee%20Roasters!%20I%20would%20like%20to%20inquire%20about%20your%20menu%20and%20table%20availability." target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
+                  <span>Chat on WhatsApp</span>
+                </a>
+                <button class="btn btn-gold" onclick="openOrderModal('Caramel Coffee', 800)">
+                  <span>Order for Pickup</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Embedded Interactive Google Maps View -->
+          <div class="map-card-wrapper reveal-on-scroll">
+            <div class="map-card-header">
+              <div class="map-header-left">
+                <span class="map-badge">Interactive Map</span>
+                <h4>Saifabad No. 1, Street 15, Faisalabad</h4>
+              </div>
+              <a href="https://www.google.com/maps/search/?api=1&query=Saifabad+No.+1+Street+15+Faisalabad" target="_blank" rel="noopener noreferrer" class="btn-directions" title="Open in Google Maps App">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="3 11 22 2 13 21 11 13 3 11"/>
+                </svg>
+                <span>Get Directions</span>
+              </a>
+            </div>
+
+            <!-- Google Map Iframe Container -->
+            <div class="google-map-container" id="contact">
+              <iframe 
+                title="AURA Coffee Roasters Location Map"
+                src="https://maps.google.com/maps?q=Saifabad+No.+1,+Street+15,+Faisalabad,+Pakistan&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                width="100%" 
+                height="100%" 
+                style="border:0;" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+              </iframe>
+              
+              <!-- Floating Location Marker Overlay Badge -->
+              <div class="map-floating-pin">
+                <div class="pin-pulse"></div>
+                <div class="pin-content">
+                  <strong>AURA Coffee Roasters</strong>
+                  <span>Street 15, Saifabad No. 1</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Transport & Landmark Info Strip -->
+            <div class="map-card-footer">
+              <div class="landmark-item">
+                <span class="landmark-icon">🚗</span>
+                <span>Street 15, Direct access from Main Saifabad</span>
+              </div>
+              <div class="landmark-item">
+                <span class="landmark-icon">☕</span>
+                <span>Dine-In, Takeaway & Street Curbside</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: CUSTOMER REVIEWS & PRAISE -->
+    <section class="section reviews-section">
+      <div class="container">
+        <div class="section-header text-center reveal-on-scroll">
+          <div class="section-tag">
+            <span class="tag-line"></span>
+            <span>Words from Coffee Lovers</span>
+            <span class="tag-line"></span>
+          </div>
+          <h2 class="section-title">Loved by Faisalabad's Coffee Connoisseurs</h2>
+        </div>
+
+        <div class="reviews-grid">
+          <div class="review-card reveal-on-scroll">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-quote">
+              "The Vanilla Latte here is in a league of its own. Not overly sweet, beautifully textured milk, and the Madagascar vanilla complements the espresso without hiding the roast."
+            </p>
+            <div class="reviewer-meta">
+              <div class="reviewer-avatar">ZK</div>
+              <div class="reviewer-info">
+                <strong>Zainab Khalid</strong>
+                <span>Regular Customer • Faisalabad</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-card reveal-on-scroll">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-quote">
+              "The Caramel Coffee is absolute perfection. Beautiful layers, deep espresso, and the salted caramel drizzle is rich. Plus, ordering through WhatsApp is lightning quick!"
+            </p>
+            <div class="reviewer-meta">
+              <div class="reviewer-avatar">HM</div>
+              <div class="reviewer-info">
+                <strong>Hamza Malik</strong>
+                <span>Coffee Enthusiast</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-card reveal-on-scroll">
+            <div class="review-stars">★★★★★</div>
+            <p class="review-quote">
+              "Finally a true third-wave roastery in Saifabad. Bought a bag of the Ethiopia Yirgacheffe for my V60 at home and it brews with unbelievable floral and peach notes."
+            </p>
+            <div class="reviewer-meta">
+              <div class="reviewer-avatar">AR</div>
+              <div class="reviewer-info">
+                <strong>Dr. Asad Raza</strong>
+                <span>Home Brewer</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-brand-col">
+        <div class="logo-text">
+          <span class="logo-title">AURA</span>
+          <span class="logo-subtitle">COFFEE ROASTERS</span>
+        </div>
+        <p class="footer-tagline">
+          Crafting moments of pure coffee bliss in Faisalabad with single-origin beans, master roasting, and genuine hospitality.
+        </p>
+        <div class="footer-social-row">
+          <a href="https://wa.me/923001234567" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.16 12.04 20.16C10.61 20.16 9.22 19.78 8 19.06L7.71 18.89L4.59 19.71L5.42 16.67L5.23 16.37C4.44 15.11 4.02 13.64 4.02 11.91C4.02 7.37 7.72 3.67 12.05 3.67M9.27 7.22C9.07 7.22 8.87 7.23 8.68 7.3C8.49 7.36 8.28 7.56 8.16 7.7C7.79 8.13 7.27 8.88 7.27 10.31C7.27 11.74 8.31 13.12 8.46 13.31C8.61 13.5 10.45 16.49 13.36 17.65C15.78 18.61 16.27 18.42 16.8 18.37C17.33 18.32 18.52 17.67 18.77 16.98C19.02 16.29 19.02 15.7 18.95 15.58C18.88 15.46 18.68 15.39 18.38 15.24C18.08 15.09 16.61 14.37 16.34 14.27C16.07 14.17 15.87 14.12 15.67 14.42C15.47 14.72 14.9 15.39 14.73 15.58C14.56 15.77 14.39 15.8 14.09 15.65C13.79 15.5 12.83 15.19 11.69 14.17C10.8 13.38 10.2 12.4 10.05 12.15C9.9 11.9 10.03 11.77 10.18 11.62C10.32 11.49 10.48 11.27 10.63 11.1C10.78 10.93 10.83 10.81 10.93 10.61C11.03 10.41 10.98 10.24 10.91 10.09C10.84 9.94 10.25 8.48 10 7.89C9.76 7.32 9.51 7.4 9.32 7.39L9.27 7.22Z"/>
+            </svg>
+          </a>
+          <a href="mailto:info@auraroasters.com" class="social-icon" aria-label="Email">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </a>
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-icon" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-links-col">
+        <h5>Quick Links</h5>
+        <ul>
+          <li><a href="#hero">Home</a></li>
+          <li><a href="#menu">Menu & Roasts</a></li>
+          <li><a href="#about">The Roastery</a></li>
+          <li><a href="#hours-location">Hours & Location</a></li>
+          <li><a href="#contact">Google Maps View</a></li>
+          <li><a href="/admin" target="_blank" style="color: var(--gold-light); font-weight: 600;">🔒 Barista & Admin Portal ↗</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-info-col">
+        <h5>Our Roastery</h5>
+        <p>📍 Street 15, Saifabad No. 1, Faisalabad, Punjab</p>
+        <p>⏰ Mon - Sat: 11:00 AM – 10:00 PM</p>
+        <p>❌ Sunday: Closed</p>
+        <p>📱 WhatsApp: <a href="https://wa.me/923001234567">+92 300 1234567</a></p>
+        <p>✉️ Email: <a href="mailto:info@auraroasters.com">info@auraroasters.com</a></p>
+      </div>
+    </div>
+
+    <div class="footer-bottom-bar">
+      <div class="container footer-bottom-content">
+        <p>&copy; 2026 AURA Coffee Roasters. All rights reserved.</p>
+        <p>Designed with passion for exceptional coffee lovers.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================ -->
+  <!-- EASY ORDERING SYSTEM MODAL DIALOG (POPUP)   -->
+  <!-- ============================================ -->
+  <dialog id="orderModal" class="order-dialog">
+    <div class="order-modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-tag">Quick & Easy Ordering</span>
+          <h3 id="modalCoffeeTitle">Order Your Handcrafted Coffee</h3>
+        </div>
+        <button type="button" class="modal-close-btn" id="closeOrderModalBtn" aria-label="Close ordering popup">&times;</button>
+      </div>
+
+      <!-- Modal Body -->
+      <form id="coffeeOrderForm" class="order-form" onsubmit="return false;">
+        <!-- Coffee Selection & Quantity Row -->
+        <div class="form-section">
+          <label class="form-label" for="coffeeSelect">Choose Your Drink</label>
+          <div class="select-wrapper">
+            <select id="coffeeSelect" class="form-select" required>
+              <option value="Vanilla Latte" data-price="600" data-img="assets/images/vanilla-latte.jpg">Vanilla Latte — Rs. 600 (Customer Favorite ★★★★★)</option>
+              <option value="Caramel Coffee" data-price="500" data-img="assets/images/caramel-coffee.jpg">Caramel Coffee — Rs. 500 (Bestseller ★★★★★)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Quantity & Real-time Total Calculation -->
+        <div class="quantity-row" style="margin-bottom: 1.25rem;">
+          <div class="quantity-control">
+            <label class="form-label">Quantity</label>
+            <div class="counter-box">
+              <button type="button" class="counter-btn" id="qtyMinus" aria-label="Decrease quantity">−</button>
+              <input type="number" id="orderQty" value="1" min="1" max="20" readonly>
+              <button type="button" class="counter-btn" id="qtyPlus" aria-label="Increase quantity">+</button>
+            </div>
+          </div>
+          <div class="total-price-box">
+            <span class="total-label">Pay on Delivery / Pickup</span>
+            <span class="total-amount" id="orderTotalDisplay">Rs. 600</span>
+          </div>
+        </div>
+
+        <!-- Customer Quick Contact Details -->
+        <div class="customer-info-section" style="margin-top: 0;">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label" for="customerName">Your Name *</label>
+              <input type="text" id="customerName" class="form-input" placeholder="e.g. Ali Raza" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="customerPhone">WhatsApp / Mobile *</label>
+              <input type="tel" id="customerPhone" class="form-input" placeholder="e.g. 0300 1234567" required>
+            </div>
+          </div>
+
+          <!-- Quick Order Type Tabs -->
+          <div class="form-group">
+            <label class="form-label">How would you like your coffee?</label>
+            <div class="order-type-tabs" id="orderTypeTabs">
+              <button type="button" class="order-type-btn active" data-type="Takeaway Pickup">
+                <span class="type-icon">🛍️</span>
+                <span>Takeaway Pickup</span>
+              </button>
+              <button type="button" class="order-type-btn" data-type="Dine-in at Roastery">
+                <span class="type-icon">🍽️</span>
+                <span>Dine-In (Table)</span>
+              </button>
+              <button type="button" class="order-type-btn" data-type="Local Delivery (Faisalabad)">
+                <span class="type-icon">🛵</span>
+                <span>Fast Delivery</span>
+              </button>
+            </div>
+            <input type="hidden" id="orderType" value="Takeaway Pickup">
+            <input type="text" id="deliveryAddress" class="form-input" placeholder="Counter Pickup (Ready in 10-15 mins)">
+          </div>
+
+          <!-- Optional Collapsible Recipe Customizations -->
+          <details class="recipe-accordion" id="recipeCustomAccordion">
+            <summary>
+              <span class="recipe-summary-label">
+                <span>☕ Customize Brew (Size, Milk, Sweetness)</span>
+                <small style="opacity: 0.65; font-size: 0.75rem;">— Optional</small>
+              </span>
+              <span class="recipe-arrow">▼</span>
+            </summary>
+            <div class="recipe-inner">
+              <div class="options-grid">
+                <!-- Size Selector -->
+                <div class="form-group">
+                  <label class="form-label">Cup Size</label>
+                  <div class="pill-group" id="sizeGroup">
+                    <label class="pill-option active">
+                      <input type="radio" name="cupSize" value="Regular (12oz)" data-extra="0" checked>
+                      <span>Regular (12oz)</span>
+                    </label>
+                    <label class="pill-option">
+                      <input type="radio" name="cupSize" value="Large (16oz)" data-extra="150">
+                      <span>Large (+Rs. 150)</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Milk Preference -->
+                <div class="form-group">
+                  <label class="form-label">Milk Choice</label>
+                  <div class="pill-group" id="milkGroup">
+                    <label class="pill-option active">
+                      <input type="radio" name="milkType" value="Whole Milk" data-extra="0" checked>
+                      <span>Whole Milk</span>
+                    </label>
+                    <label class="pill-option">
+                      <input type="radio" name="milkType" value="Oat Milk" data-extra="120">
+                      <span>Oat (+Rs. 120)</span>
+                    </label>
+                    <label class="pill-option">
+                      <input type="radio" name="milkType" value="Almond Milk" data-extra="120">
+                      <span>Almond (+Rs. 120)</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Temperature -->
+                <div class="form-group">
+                  <label class="form-label">Temperature</label>
+                  <div class="pill-group" id="tempGroup">
+                    <label class="pill-option active">
+                      <input type="radio" name="temperature" value="Hot & Steamy" checked>
+                      <span>🔥 Hot</span>
+                    </label>
+                    <label class="pill-option">
+                      <input type="radio" name="temperature" value="Iced with Cubes">
+                      <span>❄️ Iced</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Sweetness -->
+                <div class="form-group">
+                  <label class="form-label">Sweetness</label>
+                  <div class="pill-group" id="sweetGroup">
+                    <label class="pill-option">
+                      <input type="radio" name="sweetness" value="Sugar Free (0%)">
+                      <span>0% Free</span>
+                    </label>
+                    <label class="pill-option active">
+                      <input type="radio" name="sweetness" value="Standard Balanced (50%)" checked>
+                      <span>Standard</span>
+                    </label>
+                    <label class="pill-option">
+                      <input type="radio" name="sweetness" value="Extra Sweet (100%)">
+                      <span>Sweet</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label" for="orderNotes">Special Instructions (Optional)</label>
+                <input type="text" id="orderNotes" class="form-input" placeholder="e.g. Extra hot, double shot, extra drizzle...">
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <!-- Streamlined Action Buttons -->
+        <div class="order-actions-section">
+          <!-- Primary: 1-Click Instant Order Placement -->
+          <button type="button" id="confirmPlaceOrderBtn" class="btn-primary-order">
+            <span class="btn-order-title">☕ Confirm & Place Order</span>
+            <span class="btn-order-sub">Instant store receipt • Pay Cash or Card on arrival</span>
+          </button>
+
+          <!-- Secondary: Direct WhatsApp Order Option -->
+          <div class="secondary-order-actions">
+            <button type="button" id="submitWhatsappOrderBtn" class="btn-order-whatsapp-secondary">
+              <svg class="order-action-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.16 12.04 20.16C10.61 20.16 9.22 19.78 8 19.06L7.71 18.89L4.59 19.71L5.42 16.67L5.23 16.37C4.44 15.11 4.02 13.64 4.02 11.91C4.02 7.37 7.72 3.67 12.05 3.67M9.27 7.22C9.07 7.22 8.87 7.23 8.68 7.3C8.49 7.36 8.28 7.56 8.16 7.7C7.79 8.13 7.27 8.88 7.27 10.31C7.27 11.74 8.31 13.12 8.46 13.31C8.61 13.5 10.45 16.49 13.36 17.65C15.78 18.61 16.27 18.42 16.8 18.37C17.33 18.32 18.52 17.67 18.77 16.98C19.02 16.29 19.02 15.7 18.95 15.58C18.88 15.46 18.68 15.39 18.38 15.24C18.08 15.09 16.61 14.37 16.34 14.27C16.07 14.17 15.87 14.12 15.67 14.42C15.47 14.72 14.9 15.39 14.73 15.58C14.56 15.77 14.39 15.8 14.09 15.65C13.79 15.5 12.83 15.19 11.69 14.17C10.8 13.38 10.2 12.4 10.05 12.15C9.9 11.9 10.03 11.77 10.18 11.62C10.32 11.49 10.48 11.27 10.63 11.1C10.78 10.93 10.83 10.81 10.93 10.61C11.03 10.41 10.98 10.24 10.91 10.09C10.84 9.94 10.25 8.48 10 7.89C9.76 7.32 9.51 7.4 9.32 7.39L9.27 7.22Z"/>
+              </svg>
+              <span>Order via WhatsApp Direct</span>
+            </button>
+          </div>
+
+          <p class="order-disclaimer">
+            🔒 No advance payment needed online. Pay comfortably upon receiving your coffee.
+          </p>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- ============================================ -->
+  <!-- ORDER SUCCESS CONFIRMATION MODAL             -->
+  <!-- ============================================ -->
+  <dialog id="orderSuccessModal" class="order-dialog">
+    <div class="order-modal-content">
+      <div class="success-modal-card">
+        <div class="success-badge-icon">☕</div>
+        <span class="modal-tag">Order Placed Successfully!</span>
+        <h3 class="success-title">Order Received!</h3>
+        <p class="success-subtitle">Thank you, <strong id="successCustomerName">Friend</strong>. Our baristas are preparing your cup.</p>
+        
+        <div class="success-receipt-card">
+          <div class="success-receipt-row">
+            <span>Order Reference:</span>
+            <strong id="successOrderId" style="color: var(--gold-light);">#ORD-1085</strong>
+          </div>
+          <div class="success-receipt-row">
+            <span>Item:</span>
+            <strong id="successCoffeeName">Vanilla Latte</strong>
+          </div>
+          <div class="success-receipt-row">
+            <span>Order Type:</span>
+            <span id="successOrderType">Takeaway Pickup</span>
+          </div>
+          <div class="success-receipt-row">
+            <span>Status:</span>
+            <span class="badge-tag gold">Pending • Sent to Barista</span>
+          </div>
+          <div class="success-receipt-row highlight">
+            <span>Total to Pay:</span>
+            <span id="successOrderTotal">Rs. 600</span>
+          </div>
+        </div>
+
+        <div class="success-actions-row">
+          <a id="successWhatsappLink" href="#" target="_blank" class="btn btn-order-whatsapp" style="justify-content: center; text-decoration: none;">
+            <svg class="order-action-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.16 12.04 20.16C10.61 20.16 9.22 19.78 8 19.06L7.71 18.89L4.59 19.71L5.42 16.67L5.23 16.37C4.44 15.11 4.02 13.64 4.02 11.91C4.02 7.37 7.72 3.67 12.05 3.67M9.27 7.22C9.07 7.22 8.87 7.23 8.68 7.3C8.49 7.36 8.28 7.56 8.16 7.7C7.79 8.13 7.27 8.88 7.27 10.31C7.27 11.74 8.31 13.12 8.46 13.31C8.61 13.5 10.45 16.49 13.36 17.65C15.78 18.61 16.27 18.42 16.8 18.37C17.33 18.32 18.52 17.67 18.77 16.98C19.02 16.29 19.02 15.7 18.95 15.58C18.88 15.46 18.68 15.39 18.38 15.24C18.08 15.09 16.61 14.37 16.34 14.27C16.07 14.17 15.87 14.12 15.67 14.42C15.47 14.72 14.9 15.39 14.73 15.58C14.56 15.77 14.39 15.8 14.09 15.65C13.79 15.5 12.83 15.19 11.69 14.17C10.8 13.38 10.2 12.4 10.05 12.15C9.9 11.9 10.03 11.77 10.18 11.62C10.32 11.49 10.48 11.27 10.63 11.1C10.78 10.93 10.83 10.81 10.93 10.61C11.03 10.41 10.98 10.24 10.91 10.09C10.84 9.94 10.25 8.48 10 7.89C9.76 7.32 9.51 7.4 9.32 7.39L9.27 7.22Z"/>
+            </svg>
+            <span>Open Receipt in WhatsApp (Optional)</span>
+          </a>
+          <button type="button" id="closeSuccessModalBtn" style="width: 100%; padding: 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--beige-border); color: var(--cream-warm); background: transparent; cursor: pointer; font-size: 0.9rem; font-weight: 600;">
+            Close & Continue
+          </button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ============================================ -->
+  <!-- FLOATING WHATSAPP QUICK CONTACT BUTTON      -->
+  <!-- ============================================ -->
+  <aside class="floating-whatsapp-container" aria-label="WhatsApp quick chat">
+    <div class="whatsapp-tooltip" id="whatsappTooltip">
+      <span class="tooltip-close" id="closeTooltipBtn">&times;</span>
+      <strong>👋 Craving fresh coffee?</strong>
+      <p>Chat with our Barista on WhatsApp!</p>
+    </div>
+    <a href="https://wa.me/923001234567?text=Hello%20Aura%20Coffee%20Roasters!%20I'd%20like%20to%20order%20coffee." target="_blank" rel="noopener noreferrer" class="floating-whatsapp-btn" id="floatingWhatsappBtn" aria-label="Chat on WhatsApp">
+      <div class="whatsapp-ping"></div>
+      <svg viewBox="0 0 24 24" class="whatsapp-float-icon" fill="currentColor">
+        <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.16 12.04 20.16C10.61 20.16 9.22 19.78 8 19.06L7.71 18.89L4.59 19.71L5.42 16.67L5.23 16.37C4.44 15.11 4.02 13.64 4.02 11.91C4.02 7.37 7.72 3.67 12.05 3.67M9.27 7.22C9.07 7.22 8.87 7.23 8.68 7.3C8.49 7.36 8.28 7.56 8.16 7.7C7.79 8.13 7.27 8.88 7.27 10.31C7.27 11.74 8.31 13.12 8.46 13.31C8.61 13.5 10.45 16.49 13.36 17.65C15.78 18.61 16.27 18.42 16.8 18.37C17.33 18.32 18.52 17.67 18.77 16.98C19.02 16.29 19.02 15.7 18.95 15.58C18.88 15.46 18.68 15.39 18.38 15.24C18.08 15.09 16.61 14.37 16.34 14.27C16.07 14.17 15.87 14.12 15.67 14.42C15.47 14.72 14.9 15.39 14.73 15.58C14.56 15.77 14.39 15.8 14.09 15.65C13.79 15.5 12.83 15.19 11.69 14.17C10.8 13.38 10.2 12.4 10.05 12.15C9.9 11.9 10.03 11.77 10.18 11.62C10.32 11.49 10.48 11.27 10.63 11.1C10.78 10.93 10.83 10.81 10.93 10.61C11.03 10.41 10.98 10.24 10.91 10.09C10.84 9.94 10.25 8.48 10 7.89C9.76 7.32 9.51 7.4 9.32 7.39L9.27 7.22Z"/>
+      </svg>
+    </a>
+  </aside>
+
+  <!-- Interactive Toast Notification Container -->
+  <div id="toastNotification" class="toast-container" role="status" aria-live="polite">
+    <div class="toast-content" id="toastMessage">Order message prepared!</div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

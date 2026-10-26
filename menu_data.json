@@ -1,0 +1,38 @@
+[
+  {
+    "id": "drink-1",
+    "name": "Vanilla Latte",
+    "price": 600,
+    "rating": "5.0",
+    "reviewsCount": 148,
+    "badge": "⭐ Customer Favorite",
+    "badgeClass": "gold-badge",
+    "category": "featured espresso",
+    "description": "Double shot of espresso combined with steamed velvety microfoam, infused with pure Madagascar vanilla extract and finished with master rosetta latte art.",
+    "tags": [
+      "Espresso",
+      "Madagascar Vanilla",
+      "Velvet Milk"
+    ],
+    "image": "assets/images/vanilla-latte.jpg",
+    "inStock": true
+  },
+  {
+    "id": "drink-2",
+    "name": "Caramel Coffee",
+    "price": 500,
+    "rating": "5.0",
+    "reviewsCount": 192,
+    "badge": "🔥 Bestseller",
+    "badgeClass": "bestseller-badge",
+    "category": "featured iced espresso",
+    "description": "Artisanal layered macchiato featuring sweet cream milk, fresh espresso cascade, and decadent house-crafted butter caramel drizzle with crunchy roasted bean crumble.",
+    "tags": [
+      "Artisan Caramel",
+      "Cold / Hot",
+      "Layered Macchiato"
+    ],
+    "image": "assets/images/caramel-coffee.jpg",
+    "inStock": true
+  }
+]
