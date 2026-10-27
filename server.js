@@ -241,8 +241,8 @@ const server = http.createServer((req, res) => {
   }
 
   // Routing Shortcuts
-  if (pathname === '/') pathname = '/index.html';
-  if (pathname === '/admin') pathname = '/admin.html';
+  if (pathname === '/' || pathname === '') pathname = '/index.html';
+  if (pathname === '/admin' || pathname === '/admin/') pathname = '/admin.html';
 
   const filePath = path.join(__dirname, pathname);
 
