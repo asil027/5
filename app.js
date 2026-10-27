@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initMobileDrawer();
   initAmbientSound();
   initNavbarScroll();
+  initCafeSettingsSync();
+  initCustomerReviews();
+  initCustomerLiveChat();
 });
 
 /* ==========================================================================
@@ -343,7 +346,8 @@ function initOrderModal() {
     }
 
     // WhatsApp URL preparation
-    const targetPhone = '923001234567';
+    const cafeSettings = getCafeSettings();
+    const targetPhone = cafeSettings.rawPhone || '923001234567';
     const whatsappText = 
 `☕ *NEW ORDER - AURA COFFEE ROASTERS*
 ────────────────────────
@@ -363,7 +367,7 @@ function initOrderModal() {
 ${fullOrder.notes ? `• *Note:* ${fullOrder.notes}\n` : ''}
 💰 *TOTAL AMOUNT:* Rs. ${fullOrder.total.toLocaleString()}
 ────────────────────────
-📍 *Aura Roastery:* Street 15, Saifabad No. 1, Faisalabad`;
+📍 *Aura Roastery:* ${cafeSettings.address || 'Street 15, Saifabad No. 1, Faisalabad'}`;
 
     const encodedMessage = encodeURIComponent(whatsappText);
     const whatsappUrl = `https://wa.me/${targetPhone}?text=${encodedMessage}`;
@@ -993,4 +997,433 @@ function showToast(message) {
   window.toastTimer = setTimeout(() => {
     toast.classList.remove('show');
   }, 4000);
+}
+
+/* ==========================================================================
+   9. CAFE OPERATIONAL SETTINGS SYNC (HOURS, ADDRESS, PHONE, EMAIL)
+   ========================================================================== */
+const DEFAULT_CAFE_SPECS = {
+  weekdayHours: 'Monday – Saturday: 11:00 AM – 10:00 PM PKT',
+  sundayHours: 'Sunday: Closed (Weekly Roaster Maintenance)',
+  address: 'Street 15, Saifabad No. 1, Faisalabad, Punjab, Pakistan',
+  hotline: '+92 300 1234567',
+  rawPhone: '923001234567',
+  email: 'info@auraroasters.com'
+};
+
+function getCafeSettings() {
+  try {
+    const saved = localStorage.getItem('aura_cafe_settings');
+    if (saved) return Object.assign({}, DEFAULT_CAFE_SPECS, JSON.parse(saved));
+  } catch (e) {}
+  return DEFAULT_CAFE_SPECS;
+}
+
+function initCafeSettingsSync() {
+  function applySettings() {
+    const s = getCafeSettings();
+
+    // Top announcement bar
+    const topAddress = document.getElementById('topBarAddress');
+    const topHours = document.getElementById('topBarHours');
+    if (topAddress) topAddress.textContent = '📍 ' + s.address.split(',').slice(0, 2).join(',');
+    if (topHours) topHours.textContent = s.weekdayHours.replace('Monday – Saturday:', 'Mon–Sat:');
+
+    // Mobile drawer
+    const drawerAddr = document.getElementById('drawerAddress');
+    const drawerHrs = document.getElementById('drawerHours');
+    if (drawerAddr) drawerAddr.textContent = '📍 ' + s.address.split(',').slice(0, 2).join(',');
+    if (drawerHrs) drawerHrs.textContent = '🕒 ' + s.weekdayHours.replace('Monday – Saturday:', 'Mon-Sat:');
+
+    // Wooden board
+    const woodHours = document.getElementById('woodBoardHours');
+    const woodSunday = document.getElementById('woodBoardSunday');
+    const woodAddress = document.getElementById('woodBoardAddress');
+    const woodWhatsapp = document.getElementById('whatsAppLinkText');
+    const woodEmail = document.getElementById('woodBoardEmail');
+    const woodWhatsappBtn = document.getElementById('woodBoardWhatsappBtn');
+
+    if (woodHours) woodHours.textContent = s.weekdayHours.replace('Monday – Saturday:', 'Mon – Sat:');
+    if (woodSunday) woodSunday.textContent = s.sundayHours;
+    if (woodAddress) woodAddress.textContent = s.address;
+    if (woodWhatsapp) {
+      woodWhatsapp.textContent = s.hotline;
+      woodWhatsapp.href = `https://wa.me/${s.rawPhone}`;
+    }
+    if (woodEmail) {
+      woodEmail.textContent = s.email;
+      woodEmail.href = `mailto:${s.email}`;
+    }
+    if (woodWhatsappBtn) {
+      woodWhatsappBtn.href = `https://wa.me/${s.rawPhone}?text=Hello%20Aura%20Coffee%20Roasters!%20I%20would%20like%20to%20inquire%20about%20your%20menu%20and%20table%20availability.`;
+    }
+
+    // Footer
+    const footerAddr = document.getElementById('footerAddress');
+    const footerHrs = document.getElementById('footerHours');
+    const footerSun = document.getElementById('footerSunday');
+    const footerWa = document.getElementById('footerWhatsappLink');
+    const footerEm = document.getElementById('footerEmailLink');
+
+    if (footerAddr) footerAddr.textContent = '📍 ' + s.address;
+    if (footerHrs) footerHrs.textContent = '⏰ ' + s.weekdayHours;
+    if (footerSun) footerSun.textContent = '❌ ' + s.sundayHours;
+    if (footerWa) {
+      footerWa.textContent = s.hotline;
+      footerWa.href = `https://wa.me/${s.rawPhone}`;
+    }
+    if (footerEm) {
+      footerEm.textContent = s.email;
+      footerEm.href = `mailto:${s.email}`;
+    }
+
+    // Floating whatsapp quick links
+    const floatWa = document.getElementById('floatingWhatsappBtn');
+    if (floatWa) floatWa.href = `https://wa.me/${s.rawPhone}?text=Hello%20Aura%20Coffee%20Roasters!%20I'd%20like%20to%20order%20coffee.`;
+
+    const chatPanelWa = document.getElementById('chatPanelWhatsappBtn');
+    if (chatPanelWa) chatPanelWa.href = `https://wa.me/${s.rawPhone}`;
+  }
+
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'aura_cafe_settings') applySettings();
+  });
+  window.addEventListener('aura_settings_updated', applySettings);
+
+  applySettings();
+}
+
+/* ==========================================================================
+   10. CUSTOMER STAR REVIEWS & INTERACTIVE RATINGS
+   ========================================================================== */
+const SEED_REVIEWS = [
+  {
+    id: "rev-1",
+    name: "Zainab Khalid",
+    tag: "Regular Customer • Faisalabad",
+    rating: 5,
+    coffee: "Vanilla Latte",
+    quote: "The Vanilla Latte here is in a league of its own. Not overly sweet, beautifully textured milk, and the Madagascar vanilla complements the espresso without hiding the roast.",
+    date: "Oct 24, 2026"
+  },
+  {
+    id: "rev-2",
+    name: "Hamza Malik",
+    tag: "Coffee Enthusiast",
+    rating: 5,
+    coffee: "Caramel Coffee",
+    quote: "The Caramel Coffee is absolute perfection. Beautiful layers, deep espresso, and the salted caramel drizzle is rich. Plus, ordering through WhatsApp is lightning quick!",
+    date: "Oct 25, 2026"
+  },
+  {
+    id: "rev-3",
+    name: "Dr. Asad Raza",
+    tag: "Home Brewer",
+    rating: 5,
+    coffee: "Ethiopia Yirgacheffe Beans",
+    quote: "Finally a true third-wave roastery in Saifabad. Bought a bag of the Ethiopia Yirgacheffe for my V60 at home and it brews with unbelievable floral and peach notes.",
+    date: "Oct 26, 2026"
+  }
+];
+
+function initCustomerReviews() {
+  const reviewsGrid = document.getElementById('customerReviewsGrid');
+  const avgRatingText = document.getElementById('customerAvgRatingText');
+  const ratingCountText = document.getElementById('customerRatingCountText');
+
+  const openBtn = document.getElementById('openReviewModalBtn');
+  const modal = document.getElementById('leaveReviewModal');
+  const closeBtn = document.getElementById('closeReviewModalBtn');
+  const cancelBtn = document.getElementById('cancelReviewBtn');
+  const backdrop = document.getElementById('reviewModalBackdrop');
+  const form = document.getElementById('leaveReviewForm');
+
+  const starPicker = document.getElementById('starRatingPicker');
+  const starLabel = document.getElementById('starRatingLabel');
+  const ratingInput = document.getElementById('selectedStarRating');
+
+  let currentStars = 5;
+
+  const RATING_LABELS = {
+    5: "★★★★★ (5.0) - Outstanding Experience & Coffee!",
+    4: "★★★★☆ (4.0) - Very Good / Highly Recommended!",
+    3: "★★★☆☆ (3.0) - Good & Satisfactory",
+    2: "★★☆☆☆ (2.0) - Fair / Needs Some Tweaking",
+    1: "★☆☆☆☆ (1.0) - Not what I expected"
+  };
+
+  function updateStars(val) {
+    currentStars = val;
+    if (ratingInput) ratingInput.value = val;
+    if (starLabel) starLabel.textContent = RATING_LABELS[val] || `${val} Stars`;
+
+    if (starPicker) {
+      starPicker.querySelectorAll('.star-btn').forEach(btn => {
+        const starVal = parseInt(btn.getAttribute('data-value'), 10);
+        if (starVal <= val) {
+          btn.classList.add('selected');
+        } else {
+          btn.classList.remove('selected');
+        }
+      });
+    }
+  }
+
+  if (starPicker) {
+    starPicker.querySelectorAll('.star-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const val = parseInt(btn.getAttribute('data-value'), 10);
+        updateStars(val);
+      });
+      btn.addEventListener('mouseenter', () => {
+        const hoverVal = parseInt(btn.getAttribute('data-value'), 10);
+        starPicker.querySelectorAll('.star-btn').forEach(b => {
+          const v = parseInt(b.getAttribute('data-value'), 10);
+          if (v <= hoverVal) b.classList.add('hovered');
+          else b.classList.remove('hovered');
+        });
+      });
+    });
+
+    starPicker.addEventListener('mouseleave', () => {
+      starPicker.querySelectorAll('.star-btn').forEach(b => b.classList.remove('hovered'));
+    });
+  }
+
+  function getReviews() {
+    try {
+      const saved = localStorage.getItem('aura_customer_reviews');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    localStorage.setItem('aura_customer_reviews', JSON.stringify(SEED_REVIEWS));
+    return SEED_REVIEWS;
+  }
+
+  function renderReviews() {
+    if (!reviewsGrid) return;
+    const reviews = getReviews();
+    reviewsGrid.innerHTML = '';
+
+    const total = reviews.reduce((sum, r) => sum + (Number(r.rating) || 5), 0);
+    const avg = reviews.length ? (total / reviews.length).toFixed(1) : '5.0';
+
+    if (avgRatingText) avgRatingText.textContent = `${avg} / 5.0 Rating`;
+    if (ratingCountText) ratingCountText.textContent = `(Based on ${reviews.length} customer review${reviews.length === 1 ? '' : 's'})`;
+
+    reviews.forEach(r => {
+      const card = document.createElement('div');
+      card.className = 'review-card reveal-on-scroll revealed';
+      const initials = r.name ? r.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'CU';
+      const stars = '★'.repeat(r.rating || 5) + '☆'.repeat(Math.max(0, 5 - (r.rating || 5)));
+
+      card.innerHTML = `
+        <div class="review-stars">${stars}</div>
+        <p class="review-quote">"${escapeHtml(r.quote)}"</p>
+        <div class="reviewer-meta">
+          <div class="reviewer-avatar">${escapeHtml(initials)}</div>
+          <div class="reviewer-info">
+            <strong>${escapeHtml(r.name)}</strong>
+            <span>${escapeHtml(r.tag || 'Coffee Enthusiast')} • ${escapeHtml(r.coffee || 'Specialty Roast')}</span>
+          </div>
+        </div>
+      `;
+      reviewsGrid.appendChild(card);
+    });
+  }
+
+  function openModal() {
+    updateStars(5);
+    if (modal) modal.showModal();
+  }
+
+  function closeModal() {
+    if (modal) modal.close();
+    if (form) form.reset();
+  }
+
+  if (openBtn) openBtn.addEventListener('click', openModal);
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+  if (backdrop) backdrop.addEventListener('click', closeModal);
+
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('reviewCustomerName').value.trim();
+      const tag = document.getElementById('reviewCustomerTag').value.trim() || 'Verified Customer';
+      const coffee = document.getElementById('reviewFavoriteDrink').value;
+      const quote = document.getElementById('reviewComment').value.trim();
+
+      if (!name || !quote) return;
+
+      const newReview = {
+        id: 'rev-' + Date.now(),
+        name,
+        tag,
+        rating: currentStars,
+        coffee,
+        quote,
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      };
+
+      const reviews = getReviews();
+      reviews.unshift(newReview);
+      localStorage.setItem('aura_customer_reviews', JSON.stringify(reviews));
+      window.dispatchEvent(new CustomEvent('aura_reviews_updated', { detail: reviews }));
+
+      renderReviews();
+      closeModal();
+      showToast(`⭐ Thank you, ${name}! Your review has been published.`);
+    });
+  }
+
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'aura_customer_reviews') renderReviews();
+  });
+  window.addEventListener('aura_reviews_updated', renderReviews);
+
+  renderReviews();
+}
+
+/* ==========================================================================
+   11. CUSTOMER LIVE CHAT WIDGET (TALK TO BARISTA & ADMIN)
+   ========================================================================== */
+function initCustomerLiveChat() {
+  const launcherBtn = document.getElementById('openChatDrawerBtn');
+  const closePanelBtn = document.getElementById('closeChatPanelBtn');
+  const chatPanel = document.getElementById('chatWindowPanel');
+  const messagesBody = document.getElementById('customerChatMessages');
+  const chatForm = document.getElementById('customerSendChatForm');
+  const msgInput = document.getElementById('chatCustomerMsg');
+  const nameInput = document.getElementById('chatCustomerName');
+  const phoneInput = document.getElementById('chatCustomerPhone');
+  const quickPrompts = document.querySelectorAll('.prompt-chip');
+
+  // Load saved name/phone if customer previously entered
+  try {
+    const savedCustomer = localStorage.getItem('aura_customer_profile');
+    if (savedCustomer) {
+      const parsed = JSON.parse(savedCustomer);
+      if (nameInput && parsed.name) nameInput.value = parsed.name;
+      if (phoneInput && parsed.phone) phoneInput.value = parsed.phone;
+    }
+  } catch (e) {}
+
+  function toggleChat() {
+    if (!chatPanel) return;
+    chatPanel.classList.toggle('active');
+    if (chatPanel.classList.contains('active')) {
+      renderChatMessages();
+      if (msgInput) msgInput.focus();
+    }
+  }
+
+  if (launcherBtn) launcherBtn.addEventListener('click', toggleChat);
+  if (closePanelBtn) closePanelBtn.addEventListener('click', toggleChat);
+
+  // Quick prompt chips
+  quickPrompts.forEach(chip => {
+    chip.addEventListener('click', () => {
+      const prompt = chip.getAttribute('data-prompt');
+      if (msgInput && prompt) {
+        msgInput.value = prompt;
+        msgInput.focus();
+      }
+    });
+  });
+
+  function getChats() {
+    try {
+      const saved = localStorage.getItem('aura_customer_chats');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return [];
+  }
+
+  function renderChatMessages() {
+    if (!messagesBody) return;
+    const chats = getChats();
+
+    // Preserve greeting
+    messagesBody.innerHTML = `
+      <div class="chat-bubble admin-bubble">
+        <span class="bubble-sender">Head Barista</span>
+        <p>Hello & Welcome to AURA Coffee Roasters! ☕ How can we assist you with our specialty roasts, customized drinks, or dining at our Saifabad Roastery today?</p>
+        <span class="bubble-time">Live Support</span>
+      </div>
+    `;
+
+    chats.forEach(chat => {
+      // Customer message
+      const custBubble = document.createElement('div');
+      custBubble.className = 'chat-bubble customer-bubble';
+      custBubble.innerHTML = `
+        <span class="bubble-sender">${escapeHtml(chat.customerName || 'You')}</span>
+        <p>${escapeHtml(chat.message)}</p>
+        <span class="bubble-time">${escapeHtml(chat.time || '')}</span>
+      `;
+      messagesBody.appendChild(custBubble);
+
+      // Admin reply if present
+      if (chat.reply) {
+        const adminBubble = document.createElement('div');
+        adminBubble.className = 'chat-bubble admin-bubble';
+        adminBubble.innerHTML = `
+          <span class="bubble-sender">Head Barista / Admin</span>
+          <p>${escapeHtml(chat.reply)}</p>
+          <span class="bubble-time">Replied by Admin</span>
+        `;
+        messagesBody.appendChild(adminBubble);
+      }
+    });
+
+    messagesBody.scrollTop = messagesBody.scrollHeight;
+  }
+
+  if (chatForm) {
+    chatForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = nameInput ? nameInput.value.trim() : 'Customer';
+      const phone = phoneInput ? phoneInput.value.trim() : '';
+      const msg = msgInput ? msgInput.value.trim() : '';
+
+      if (!name || !msg) return;
+
+      // Remember profile
+      localStorage.setItem('aura_customer_profile', JSON.stringify({ name, phone }));
+
+      const timeStr = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) + ' PKT';
+
+      const newInquiry = {
+        id: 'inq-' + Date.now(),
+        customerName: name,
+        contact: phone,
+        message: msg,
+        time: 'Today, ' + timeStr,
+        reply: null
+      };
+
+      const chats = getChats();
+      chats.push(newInquiry);
+      localStorage.setItem('aura_customer_chats', JSON.stringify(chats));
+      window.dispatchEvent(new CustomEvent('aura_chats_updated', { detail: chats }));
+
+      msgInput.value = '';
+      renderChatMessages();
+
+      // Update WhatsApp link inside chat panel with user's question pre-filled
+      const s = getCafeSettings();
+      const chatPanelWa = document.getElementById('chatPanelWhatsappBtn');
+      if (chatPanelWa) {
+        chatPanelWa.href = `https://wa.me/${s.rawPhone}?text=${encodeURIComponent('Hello Aura Roasters! ' + msg + ' (From: ' + name + ')')}`;
+      }
+
+      showToast(`✓ Question sent to Barista Admin! We'll reply shortly.`);
+    });
+  }
+
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'aura_customer_chats') renderChatMessages();
+  });
+  window.addEventListener('aura_chats_updated', renderChatMessages);
 }

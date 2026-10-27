@@ -30,10 +30,10 @@
       <div class="announcement-promo">
         <span>✨ Handcrafted with 100% Single-Origin Beans</span>
         <span class="announcement-divider">•</span>
-        <span>📍 Street 15, Saifabad No. 1, Faisalabad</span>
+        <span id="topBarAddress">📍 Street 15, Saifabad No. 1, Faisalabad</span>
       </div>
       <div class="announcement-hours">
-        <span>Mon–Sat: 11:00 AM – 10:00 PM</span>
+        <span id="topBarHours">Mon–Sat: 11:00 AM – 10:00 PM</span>
       </div>
     </div>
   </div>
@@ -114,8 +114,8 @@
         <span>Order Coffee Now</span>
       </button>
       <div class="drawer-contact-info">
-        <p>📍 Saifabad No. 1, Street 15, Faisalabad</p>
-        <p>🕒 Mon-Sat: 11 AM - 10 PM (Closed Sun)</p>
+        <p id="drawerAddress">📍 Saifabad No. 1, Street 15, Faisalabad</p>
+        <p id="drawerHours">🕒 Mon-Sat: 11 AM - 10 PM (Closed Sun)</p>
       </div>
     </div>
   </div>
@@ -462,8 +462,8 @@
                   </div>
                   <div class="wood-item-details">
                     <span class="item-label">Opening Hours</span>
-                    <strong class="item-value">Mon – Sat: 11:00 AM – 10:00 PM</strong>
-                    <span class="item-sub closed-badge">Closed on Sunday</span>
+                    <strong class="item-value" id="woodBoardHours">Mon – Sat: 11:00 AM – 10:00 PM</strong>
+                    <span class="item-sub closed-badge" id="woodBoardSunday">Closed on Sunday</span>
                   </div>
                 </div>
 
@@ -477,7 +477,7 @@
                   </div>
                   <div class="wood-item-details">
                     <span class="item-label">Address</span>
-                    <strong class="item-value">Street 15, Saifabad No. 1, Faisalabad</strong>
+                    <strong class="item-value" id="woodBoardAddress">Street 15, Saifabad No. 1, Faisalabad</strong>
                     <span class="item-sub">Easy street parking available</span>
                   </div>
                 </div>
@@ -508,7 +508,7 @@
                   </div>
                   <div class="wood-item-details">
                     <span class="item-label">Email Support & Orders</span>
-                    <a href="mailto:info@auraroasters.com" class="item-link">
+                    <a href="mailto:info@auraroasters.com" class="item-link" id="woodBoardEmail">
                       info@auraroasters.com
                     </a>
                     <span class="item-sub">Corporate inquiries & bulk coffee orders</span>
@@ -518,7 +518,7 @@
 
               <!-- Quick action buttons on wooden board -->
               <div class="wood-actions">
-                <a href="https://wa.me/923001234567?text=Hello%20Aura%20Coffee%20Roasters!%20I%20would%20like%20to%20inquire%20about%20your%20menu%20and%20table%20availability." target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">
+                <a href="https://wa.me/923001234567?text=Hello%20Aura%20Coffee%20Roasters!%20I%20would%20like%20to%20inquire%20about%20your%20menu%20and%20table%20availability." target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp" id="woodBoardWhatsappBtn">
                   <span>Chat on WhatsApp</span>
                 </a>
                 <button class="btn btn-gold" onclick="openOrderModal('Caramel Coffee', 800)">
@@ -583,7 +583,7 @@
     </section>
 
     <!-- SECTION: CUSTOMER REVIEWS & PRAISE -->
-    <section class="section reviews-section">
+    <section class="section reviews-section" id="reviews">
       <div class="container">
         <div class="section-header text-center reveal-on-scroll">
           <div class="section-tag">
@@ -592,50 +592,22 @@
             <span class="tag-line"></span>
           </div>
           <h2 class="section-title">Loved by Faisalabad's Coffee Connoisseurs</h2>
+          
+          <!-- Rating badge & Leave review CTA -->
+          <div class="reviews-cta-row" style="margin-top: 1.25rem; display: flex; align-items: center; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+            <div class="rating-highlight-pill">
+              <span class="star-icon">⭐</span>
+              <strong id="customerAvgRatingText">5.0 / 5.0 Rating</strong>
+              <span class="rating-count" id="customerRatingCountText">(Based on 3+ verified reviews)</span>
+            </div>
+            <button class="btn btn-gold" id="openReviewModalBtn" style="padding: 0.65rem 1.4rem; font-size: 0.9rem;">
+              <span>⭐ Rate & Write a Review</span>
+            </button>
+          </div>
         </div>
 
-        <div class="reviews-grid">
-          <div class="review-card reveal-on-scroll">
-            <div class="review-stars">★★★★★</div>
-            <p class="review-quote">
-              "The Vanilla Latte here is in a league of its own. Not overly sweet, beautifully textured milk, and the Madagascar vanilla complements the espresso without hiding the roast."
-            </p>
-            <div class="reviewer-meta">
-              <div class="reviewer-avatar">ZK</div>
-              <div class="reviewer-info">
-                <strong>Zainab Khalid</strong>
-                <span>Regular Customer • Faisalabad</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="review-card reveal-on-scroll">
-            <div class="review-stars">★★★★★</div>
-            <p class="review-quote">
-              "The Caramel Coffee is absolute perfection. Beautiful layers, deep espresso, and the salted caramel drizzle is rich. Plus, ordering through WhatsApp is lightning quick!"
-            </p>
-            <div class="reviewer-meta">
-              <div class="reviewer-avatar">HM</div>
-              <div class="reviewer-info">
-                <strong>Hamza Malik</strong>
-                <span>Coffee Enthusiast</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="review-card reveal-on-scroll">
-            <div class="review-stars">★★★★★</div>
-            <p class="review-quote">
-              "Finally a true third-wave roastery in Saifabad. Bought a bag of the Ethiopia Yirgacheffe for my V60 at home and it brews with unbelievable floral and peach notes."
-            </p>
-            <div class="reviewer-meta">
-              <div class="reviewer-avatar">AR</div>
-              <div class="reviewer-info">
-                <strong>Dr. Asad Raza</strong>
-                <span>Home Brewer</span>
-              </div>
-            </div>
-          </div>
+        <div class="reviews-grid" id="customerReviewsGrid">
+          <!-- Dynamically populated by app.js -->
         </div>
       </div>
     </section>
@@ -688,11 +660,11 @@
 
       <div class="footer-info-col">
         <h5>Our Roastery</h5>
-        <p>📍 Street 15, Saifabad No. 1, Faisalabad, Punjab</p>
-        <p>⏰ Mon - Sat: 11:00 AM – 10:00 PM</p>
-        <p>❌ Sunday: Closed</p>
-        <p>📱 WhatsApp: <a href="https://wa.me/923001234567">+92 300 1234567</a></p>
-        <p>✉️ Email: <a href="mailto:info@auraroasters.com">info@auraroasters.com</a></p>
+        <p id="footerAddress">📍 Street 15, Saifabad No. 1, Faisalabad, Punjab</p>
+        <p id="footerHours">⏰ Mon - Sat: 11:00 AM – 10:00 PM</p>
+        <p id="footerSunday">❌ Sunday: Closed</p>
+        <p>📱 WhatsApp: <a href="https://wa.me/923001234567" id="footerWhatsappLink">+92 300 1234567</a></p>
+        <p>✉️ Email: <a href="mailto:info@auraroasters.com" id="footerEmailLink">info@auraroasters.com</a></p>
       </div>
     </div>
 
@@ -945,20 +917,146 @@
   </dialog>
 
   <!-- ============================================ -->
-  <!-- FLOATING WHATSAPP QUICK CONTACT BUTTON      -->
+  <!-- CUSTOMER STAR REVIEW MODAL DIALOG            -->
   <!-- ============================================ -->
-  <aside class="floating-whatsapp-container" aria-label="WhatsApp quick chat">
-    <div class="whatsapp-tooltip" id="whatsappTooltip">
-      <span class="tooltip-close" id="closeTooltipBtn">&times;</span>
-      <strong>👋 Craving fresh coffee?</strong>
-      <p>Chat with our Barista on WhatsApp!</p>
+  <dialog id="leaveReviewModal" class="order-modal" aria-labelledby="reviewModalTitle">
+    <div class="order-modal-backdrop" id="reviewModalBackdrop"></div>
+    <div class="order-modal-content">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <span class="modal-tag">Community Feedback</span>
+          <h3 id="reviewModalTitle">Share Your Experience & Rating</h3>
+        </div>
+        <button class="modal-close-btn" id="closeReviewModalBtn" aria-label="Close modal">&times;</button>
+      </div>
+
+      <form id="leaveReviewForm" onsubmit="return false;" class="review-form" style="padding: 1rem 0;">
+        <!-- Star Rating Picker -->
+        <div class="form-group" style="text-align: center; margin-bottom: 1.25rem;">
+          <label style="display: block; font-weight: 600; color: var(--gold-light); margin-bottom: 0.35rem; font-size: 0.95rem;">
+            Select Your Star Rating *
+          </label>
+          <div class="star-rating-picker" id="starRatingPicker" style="display: inline-flex; gap: 0.5rem; font-size: 2.2rem; cursor: pointer; user-select: none;">
+            <span class="star-btn selected" data-value="1">★</span>
+            <span class="star-btn selected" data-value="2">★</span>
+            <span class="star-btn selected" data-value="3">★</span>
+            <span class="star-btn selected" data-value="4">★</span>
+            <span class="star-btn selected" data-value="5">★</span>
+          </div>
+          <div id="starRatingLabel" style="margin-top: 0.4rem; font-size: 0.88rem; color: #f59e0b; font-weight: 600;">
+            ★★★★★ (5.0) - Outstanding Experience & Coffee!
+          </div>
+          <input type="hidden" id="selectedStarRating" value="5">
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Your Name *</label>
+            <input type="text" id="reviewCustomerName" class="form-input" placeholder="e.g. Bilal Ahmed" required>
+          </div>
+          <div class="form-group">
+            <label>City / Customer Tag</label>
+            <input type="text" id="reviewCustomerTag" class="form-input" placeholder="e.g. Regular • Faisalabad">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Favorite Drink or Experience</label>
+          <select id="reviewFavoriteDrink" class="form-input">
+            <option value="Vanilla Latte">Vanilla Latte (Madagascar Classic)</option>
+            <option value="Caramel Coffee">Layered Caramel Coffee</option>
+            <option value="Ethiopia Yirgacheffe Beans">Ethiopia Yirgacheffe Single-Origin</option>
+            <option value="Artisanal Espresso">Artisanal Espresso & Microfoam</option>
+            <option value="Website & Ordering Experience">Website & Online Ordering Experience</option>
+            <option value="Roastery Ambiance">Roastery Hospitality & Ambiance</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Your Review & Feedback *</label>
+          <textarea id="reviewComment" class="form-input" rows="3" placeholder="Tell us what you loved about our roast, taste, packaging, or customer service..." required></textarea>
+        </div>
+
+        <div class="modal-footer" style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-outline" id="cancelReviewBtn">Cancel</button>
+          <button type="submit" class="btn btn-gold" id="submitReviewBtn">Publish My Review</button>
+        </div>
+      </form>
     </div>
-    <a href="https://wa.me/923001234567?text=Hello%20Aura%20Coffee%20Roasters!%20I'd%20like%20to%20order%20coffee." target="_blank" rel="noopener noreferrer" class="floating-whatsapp-btn" id="floatingWhatsappBtn" aria-label="Chat on WhatsApp">
-      <div class="whatsapp-ping"></div>
-      <svg viewBox="0 0 24 24" class="whatsapp-float-icon" fill="currentColor">
-        <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.16 12.04 20.16C10.61 20.16 9.22 19.78 8 19.06L7.71 18.89L4.59 19.71L5.42 16.67L5.23 16.37C4.44 15.11 4.02 13.64 4.02 11.91C4.02 7.37 7.72 3.67 12.05 3.67M9.27 7.22C9.07 7.22 8.87 7.23 8.68 7.3C8.49 7.36 8.28 7.56 8.16 7.7C7.79 8.13 7.27 8.88 7.27 10.31C7.27 11.74 8.31 13.12 8.46 13.31C8.61 13.5 10.45 16.49 13.36 17.65C15.78 18.61 16.27 18.42 16.8 18.37C17.33 18.32 18.52 17.67 18.77 16.98C19.02 16.29 19.02 15.7 18.95 15.58C18.88 15.46 18.68 15.39 18.38 15.24C18.08 15.09 16.61 14.37 16.34 14.27C16.07 14.17 15.87 14.12 15.67 14.42C15.47 14.72 14.9 15.39 14.73 15.58C14.56 15.77 14.39 15.8 14.09 15.65C13.79 15.5 12.83 15.19 11.69 14.17C10.8 13.38 10.2 12.4 10.05 12.15C9.9 11.9 10.03 11.77 10.18 11.62C10.32 11.49 10.48 11.27 10.63 11.1C10.78 10.93 10.83 10.81 10.93 10.61C11.03 10.41 10.98 10.24 10.91 10.09C10.84 9.94 10.25 8.48 10 7.89C9.76 7.32 9.51 7.4 9.32 7.39L9.27 7.22Z"/>
-      </svg>
-    </a>
+  </dialog>
+
+  <!-- ============================================ -->
+  <!-- FLOATING CHAT & WHATSAPP WIDGET              -->
+  <!-- ============================================ -->
+  <aside class="customer-chat-widget" id="customerChatWidget">
+    <!-- Trigger Floating Buttons -->
+    <div class="chat-launcher-wrap">
+      <button class="chat-launcher-btn" id="openChatDrawerBtn" aria-label="Talk to Barista & Admin">
+        <span class="chat-online-dot"></span>
+        <svg viewBox="0 0 24 24" class="chat-launcher-icon" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+        </svg>
+        <span class="chat-launcher-text">Talk with Admin</span>
+      </button>
+
+      <a href="https://wa.me/923001234567?text=Hello%20Aura%20Coffee%20Roasters!%20I'd%20like%20to%20order%20coffee." target="_blank" rel="noopener noreferrer" class="floating-whatsapp-btn" id="floatingWhatsappBtn" aria-label="Chat on WhatsApp" title="WhatsApp Hotline">
+        <div class="whatsapp-ping"></div>
+        <svg viewBox="0 0 24 24" class="whatsapp-float-icon" fill="currentColor">
+          <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.16 12.04 20.16C10.61 20.16 9.22 19.78 8 19.06L7.71 18.89L4.59 19.71L5.42 16.67L5.23 16.37C4.44 15.11 4.02 13.64 4.02 11.91C4.02 7.37 7.72 3.67 12.05 3.67M9.27 7.22C9.07 7.22 8.87 7.23 8.68 7.3C8.49 7.36 8.28 7.56 8.16 7.7C7.79 8.13 7.27 8.88 7.27 10.31C7.27 11.74 8.31 13.12 8.46 13.31C8.61 13.5 10.45 16.49 13.36 17.65C15.78 18.61 16.27 18.42 16.8 18.37C17.33 18.32 18.52 17.67 18.77 16.98C19.02 16.29 19.02 15.7 18.95 15.58C18.88 15.46 18.68 15.39 18.38 15.24C18.08 15.09 16.61 14.37 16.34 14.27C16.07 14.17 15.87 14.12 15.67 14.42C15.47 14.72 14.9 15.39 14.73 15.58C14.56 15.77 14.39 15.8 14.09 15.65C13.79 15.5 12.83 15.19 11.69 14.17C10.8 13.38 10.2 12.4 10.05 12.15C9.9 11.9 10.03 11.77 10.18 11.62C10.32 11.49 10.48 11.27 10.63 11.1C10.78 10.93 10.83 10.81 10.93 10.61C11.03 10.41 10.98 10.24 10.91 10.09C10.84 9.94 10.25 8.48 10 7.89C9.76 7.32 9.51 7.4 9.32 7.39L9.27 7.22Z"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Slide-up Chat Window Panel -->
+    <div class="chat-window-panel" id="chatWindowPanel">
+      <div class="chat-panel-header">
+        <div class="chat-header-info">
+          <div class="chat-barista-avatar">☕</div>
+          <div>
+            <strong>Barista & Admin Support</strong>
+            <span class="chat-sub-status">🟢 Online • Instant Response</span>
+          </div>
+        </div>
+        <button class="chat-panel-close" id="closeChatPanelBtn" aria-label="Close chat">&times;</button>
+      </div>
+
+      <!-- Quick Conversation Prompts -->
+      <div class="chat-quick-prompts">
+        <button class="prompt-chip" data-prompt="Do you have Ethiopian beans in stock today?">Ethiopia Beans?</button>
+        <button class="prompt-chip" data-prompt="Can I reserve a table for this evening?">Table Reservation?</button>
+        <button class="prompt-chip" data-prompt="What milk alternatives do you offer?">Oat / Almond Milk?</button>
+      </div>
+
+      <!-- Live Messages Flow -->
+      <div class="chat-messages-body" id="customerChatMessages">
+        <!-- Welcoming greeting -->
+        <div class="chat-bubble admin-bubble">
+          <span class="bubble-sender">Head Barista</span>
+          <p>Hello & Welcome to AURA Coffee Roasters! ☕ How can we assist you with our specialty roasts, customized drinks, or dining at our Saifabad Roastery today?</p>
+          <span class="bubble-time">Live Support</span>
+        </div>
+      </div>
+
+      <!-- Input and Send Box -->
+      <form id="customerSendChatForm" onsubmit="return false;" class="chat-input-area">
+        <div class="chat-sender-fields">
+          <input type="text" id="chatCustomerName" placeholder="Your Name" required>
+          <input type="text" id="chatCustomerPhone" placeholder="Phone / WhatsApp (Optional)">
+        </div>
+        <div class="chat-message-row">
+          <textarea id="chatCustomerMsg" rows="1" placeholder="Type your question or request..." required></textarea>
+          <button type="submit" id="sendChatBtn" class="chat-send-btn" aria-label="Send message">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="22" y1="2" x2="11" y2="13"/>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+            </svg>
+          </button>
+        </div>
+        <a href="https://wa.me/923001234567" target="_blank" rel="noopener noreferrer" class="btn-chat-whatsapp" id="chatPanelWhatsappBtn">
+          <span>📱 Or chat instantly on WhatsApp</span>
+        </a>
+      </form>
+    </div>
   </aside>
 
   <!-- Interactive Toast Notification Container -->

@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initOrdersManager();
   initCafeToggle();
   initMenuManager();
+  initCafeSpecsManager();
+  initCustomerInquiriesManager();
+  initCustomerReviewsManager();
 });
 
 /* 1. Live Admin Clock */
@@ -616,6 +619,348 @@ function initMenuManager() {
   });
 
   fetchMenu();
+}
+
+/* 5. Roastery Operations & Location Specs Manager */
+const DEFAULT_SPECS = {
+  weekdayHours: 'Monday – Saturday: 11:00 AM – 10:00 PM PKT',
+  sundayHours: 'Sunday: Closed (Weekly Roaster Maintenance)',
+  address: 'Street 15, Saifabad No. 1, Faisalabad, Punjab, Pakistan',
+  hotline: '+92 300 1234567',
+  rawPhone: '923001234567',
+  email: 'info@auraroasters.com'
+};
+
+function initCafeSpecsManager() {
+  const modal = document.getElementById('editSpecsModal');
+  const openBtn = document.getElementById('openEditSpecsBtn');
+  const closeBtn = document.getElementById('closeEditSpecsModalBtn');
+  const cancelBtn = document.getElementById('cancelEditSpecsBtn');
+  const form = document.getElementById('editSpecsForm');
+  const resetBtn = document.getElementById('resetSpecsDefaultBtn');
+
+  const elWeekday = document.getElementById('adminWeekdayHours');
+  const elSunday = document.getElementById('adminSundayHours');
+  const elAddress = document.getElementById('adminAddressText');
+  const elHotline = document.getElementById('adminHotlineText');
+  const elEmail = document.getElementById('adminEmailText');
+
+  const inputWeekday = document.getElementById('specWeekdayHours');
+  const inputSunday = document.getElementById('specSundayHours');
+  const inputAddress = document.getElementById('specAddress');
+  const inputHotline = document.getElementById('specHotline');
+  const inputRawPhone = document.getElementById('specRawPhone');
+  const inputEmail = document.getElementById('specEmail');
+
+  function getSpecs() {
+    try {
+      const saved = localStorage.getItem('aura_cafe_settings');
+      if (saved) return Object.assign({}, DEFAULT_SPECS, JSON.parse(saved));
+    } catch (e) {}
+    return DEFAULT_SPECS;
+  }
+
+  function renderSpecs() {
+    const s = getSpecs();
+    if (elWeekday) elWeekday.textContent = s.weekdayHours;
+    if (elSunday) elSunday.textContent = s.sundayHours;
+    if (elAddress) elAddress.textContent = s.address;
+    if (elHotline) elHotline.textContent = s.hotline;
+    if (elEmail) elEmail.textContent = s.email;
+  }
+
+  function populateForm() {
+    const s = getSpecs();
+    if (inputWeekday) inputWeekday.value = s.weekdayHours;
+    if (inputSunday) inputSunday.value = s.sundayHours;
+    if (inputAddress) inputAddress.value = s.address;
+    if (inputHotline) inputHotline.value = s.hotline;
+    if (inputRawPhone) inputRawPhone.value = s.rawPhone;
+    if (inputEmail) inputEmail.value = s.email;
+  }
+
+  if (openBtn && modal) {
+    openBtn.addEventListener('click', () => {
+      populateForm();
+      modal.showModal();
+    });
+  }
+
+  function closeModal() {
+    if (modal) modal.close();
+  }
+
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      if (confirm('Reset operational details to original defaults?')) {
+        localStorage.setItem('aura_cafe_settings', JSON.stringify(DEFAULT_SPECS));
+        window.dispatchEvent(new CustomEvent('aura_settings_updated', { detail: DEFAULT_SPECS }));
+        renderSpecs();
+        populateForm();
+        closeModal();
+      }
+    });
+  }
+
+  if (form) {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const updated = {
+        weekdayHours: inputWeekday.value.trim() || DEFAULT_SPECS.weekdayHours,
+        sundayHours: inputSunday.value.trim() || DEFAULT_SPECS.sundayHours,
+        address: inputAddress.value.trim() || DEFAULT_SPECS.address,
+        hotline: inputHotline.value.trim() || DEFAULT_SPECS.hotline,
+        rawPhone: inputRawPhone.value.trim().replace(/\D/g, '') || DEFAULT_SPECS.rawPhone,
+        email: inputEmail.value.trim() || DEFAULT_SPECS.email
+      };
+      localStorage.setItem('aura_cafe_settings', JSON.stringify(updated));
+      window.dispatchEvent(new CustomEvent('aura_settings_updated', { detail: updated }));
+      renderSpecs();
+      closeModal();
+      alert('✓ Cafe operational specs updated and synced to customer website!');
+    });
+  }
+
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'aura_cafe_settings') renderSpecs();
+  });
+
+  renderSpecs();
+}
+
+/* 6. Customer Live Chat & Inquiries Manager */
+const DEFAULT_INQUIRIES = [
+  {
+    id: "inq-101",
+    customerName: "Usman Tariq",
+    contact: "0300-9876543",
+    message: "Do you have fresh Ethiopia Yirgacheffe whole beans in stock today? Looking for 500g pouch.",
+    time: "Today, 06:15 PM PKT",
+    reply: "Yes Usman! We have freshly roasted batches from this morning. You can pick it up or we can deliver to you."
+  },
+  {
+    id: "inq-102",
+    customerName: "Ayesha Bilal",
+    contact: "ayesha.b@gmail.com",
+    message: "Can I reserve an outdoor table for 4 persons this evening around 8:00 PM?",
+    time: "Today, 07:30 PM PKT",
+    reply: null
+  }
+];
+
+function initCustomerInquiriesManager() {
+  const container = document.getElementById('inquiriesContainer');
+  const refreshBtn = document.getElementById('refreshInquiriesBtn');
+
+  function getInquiries() {
+    try {
+      const saved = localStorage.getItem('aura_customer_chats');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    localStorage.setItem('aura_customer_chats', JSON.stringify(DEFAULT_INQUIRIES));
+    return DEFAULT_INQUIRIES;
+  }
+
+  function saveInquiries(list) {
+    localStorage.setItem('aura_customer_chats', JSON.stringify(list));
+    window.dispatchEvent(new CustomEvent('aura_chats_updated', { detail: list }));
+  }
+
+  function renderInquiries() {
+    if (!container) return;
+    const inquiries = getInquiries();
+    container.innerHTML = '';
+
+    if (!inquiries || inquiries.length === 0) {
+      container.innerHTML = '<p style="color: var(--text-dim); padding: 1.5rem; text-align: center;">No customer inquiries right now. Inquiries from the website chat widget will show here in real-time.</p>';
+      return;
+    }
+
+    inquiries.forEach((inq, idx) => {
+      const card = document.createElement('div');
+      card.className = 'inquiry-card';
+      const initials = inq.customerName ? inq.customerName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : 'CU';
+
+      card.innerHTML = `
+        <div class="inquiry-header">
+          <div class="inquiry-sender">
+            <div class="sender-avatar">${escapeHtml(initials)}</div>
+            <div>
+              <span class="sender-name">${escapeHtml(inq.customerName || 'Website Visitor')}</span>
+              ${inq.contact ? `<span class="sender-contact">📞 ${escapeHtml(inq.contact)}</span>` : ''}
+            </div>
+          </div>
+          <span class="inquiry-time">${escapeHtml(inq.time || 'Recent')}</span>
+        </div>
+        <div class="inquiry-body">
+          "${escapeHtml(inq.message)}"
+        </div>
+        ${inq.reply ? `
+          <div class="inquiry-reply-thread">
+            <div class="inquiry-reply-label">✓ Head Barista / Admin Reply:</div>
+            <div class="inquiry-reply-text">${escapeHtml(inq.reply)}</div>
+          </div>
+        ` : ''}
+        <div class="inquiry-actions">
+          <input type="text" class="inquiry-reply-input" placeholder="${inq.reply ? 'Update reply to customer...' : 'Type reply to customer...'}" data-idx="${idx}" value="${inq.reply ? escapeHtml(inq.reply) : ''}">
+          <button class="btn-send-reply" data-idx="${idx}">Send Reply</button>
+          ${inq.contact && inq.contact.replace(/\D/g, '').length >= 10 ? `
+            <a href="https://wa.me/${inq.contact.replace(/\D/g, '')}?text=${encodeURIComponent('Hello ' + inq.customerName + ', thank you for reaching out to Aura Coffee Roasters!')}" target="_blank" class="btn-whatsapp-chat">
+              <span>Chat WhatsApp</span>
+            </a>
+          ` : ''}
+          <button class="btn-dismiss-inquiry" data-idx="${idx}">Dismiss</button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+
+    container.querySelectorAll('.btn-send-reply').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.getAttribute('data-idx'), 10);
+        const input = container.querySelector(`.inquiry-reply-input[data-idx="${idx}"]`);
+        if (input && input.value.trim()) {
+          const list = getInquiries();
+          list[idx].reply = input.value.trim();
+          saveInquiries(list);
+          renderInquiries();
+        }
+      });
+    });
+
+    container.querySelectorAll('.btn-dismiss-inquiry').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.getAttribute('data-idx'), 10);
+        const list = getInquiries();
+        list.splice(idx, 1);
+        saveInquiries(list);
+        renderInquiries();
+      });
+    });
+  }
+
+  if (refreshBtn) refreshBtn.addEventListener('click', renderInquiries);
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'aura_customer_chats') renderInquiries();
+  });
+  window.addEventListener('aura_chats_updated', renderInquiries);
+
+  renderInquiries();
+}
+
+/* 7. Customer Star Reviews Manager */
+const DEFAULT_REVIEWS = [
+  {
+    id: "rev-1",
+    name: "Zainab Khalid",
+    tag: "Regular Customer • Faisalabad",
+    rating: 5,
+    coffee: "Vanilla Latte",
+    quote: "The Vanilla Latte here is in a league of its own. Not overly sweet, beautifully textured milk, and the Madagascar vanilla complements the espresso without hiding the roast.",
+    date: "Oct 24, 2026"
+  },
+  {
+    id: "rev-2",
+    name: "Hamza Malik",
+    tag: "Coffee Enthusiast",
+    rating: 5,
+    coffee: "Caramel Coffee",
+    quote: "The Caramel Coffee is absolute perfection. Beautiful layers, deep espresso, and the salted caramel drizzle is rich. Plus, ordering through WhatsApp is lightning quick!",
+    date: "Oct 25, 2026"
+  },
+  {
+    id: "rev-3",
+    name: "Dr. Asad Raza",
+    tag: "Home Brewer",
+    rating: 5,
+    coffee: "Ethiopia Yirgacheffe Beans",
+    quote: "Finally a true third-wave roastery in Saifabad. Bought a bag of the Ethiopia Yirgacheffe for my V60 at home and it brews with unbelievable floral and peach notes.",
+    date: "Oct 26, 2026"
+  }
+];
+
+function initCustomerReviewsManager() {
+  const grid = document.getElementById('reviewsAdminGrid');
+  const avgRatingEl = document.getElementById('adminAvgRating');
+  const totalCountEl = document.getElementById('adminTotalReviewsCount');
+
+  function getReviews() {
+    try {
+      const saved = localStorage.getItem('aura_customer_reviews');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    localStorage.setItem('aura_customer_reviews', JSON.stringify(DEFAULT_REVIEWS));
+    return DEFAULT_REVIEWS;
+  }
+
+  function saveReviews(list) {
+    localStorage.setItem('aura_customer_reviews', JSON.stringify(list));
+    window.dispatchEvent(new CustomEvent('aura_reviews_updated', { detail: list }));
+  }
+
+  function renderReviews() {
+    if (!grid) return;
+    const reviews = getReviews();
+    grid.innerHTML = '';
+
+    if (!reviews || reviews.length === 0) {
+      grid.innerHTML = '<p style="color: var(--text-dim); padding: 1.5rem;">No reviews submitted yet.</p>';
+      if (avgRatingEl) avgRatingEl.textContent = '5.0';
+      if (totalCountEl) totalCountEl.textContent = '(0 Reviews)';
+      return;
+    }
+
+    const totalScore = reviews.reduce((acc, r) => acc + (Number(r.rating) || 5), 0);
+    const avg = (totalScore / reviews.length).toFixed(1);
+    if (avgRatingEl) avgRatingEl.textContent = avg;
+    if (totalCountEl) totalCountEl.textContent = `(${reviews.length} Review${reviews.length === 1 ? '' : 's'})`;
+
+    reviews.forEach((r, idx) => {
+      const card = document.createElement('div');
+      card.className = 'admin-review-card';
+      const stars = '★'.repeat(r.rating || 5) + '☆'.repeat(Math.max(0, 5 - (r.rating || 5)));
+
+      card.innerHTML = `
+        <div class="review-card-top">
+          <div class="review-card-stars">${stars}</div>
+          ${r.coffee ? `<span class="review-card-brew">${escapeHtml(r.coffee)}</span>` : ''}
+        </div>
+        <div class="admin-review-quote">
+          "${escapeHtml(r.quote)}"
+        </div>
+        <div class="admin-review-author">
+          <div>
+            <div class="review-author-name">${escapeHtml(r.name)}</div>
+            <div class="review-author-tag">${escapeHtml(r.tag || 'Verified Customer')} • ${escapeHtml(r.date || 'Recent')}</div>
+          </div>
+          <button class="btn-delete-review" data-idx="${idx}" title="Delete review">🗑️ Remove</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+
+    grid.querySelectorAll('.btn-delete-review').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.getAttribute('data-idx'), 10);
+        if (confirm('Delete this customer review?')) {
+          const list = getReviews();
+          list.splice(idx, 1);
+          saveReviews(list);
+          renderReviews();
+        }
+      });
+    });
+  }
+
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'aura_customer_reviews') renderReviews();
+  });
+  window.addEventListener('aura_reviews_updated', renderReviews);
+
+  renderReviews();
 }
 
 function escapeHtml(str) {

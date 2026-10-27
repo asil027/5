@@ -245,34 +245,129 @@
       </dialog>
 
       <!-- Cafe Settings & Operational Details -->
-      <section class="admin-section">
+      <section class="admin-section" id="operationalSpecsSection">
         <div class="section-top-bar">
           <div class="section-heading-wrap">
             <h2>Cafe Operations & Location Specs</h2>
-            <p>Operational hours, customer hotline, and location profile.</p>
+            <p>Operational hours, customer hotline, and location profile (Synced live with customer website).</p>
           </div>
+          <button id="openEditSpecsBtn" class="btn-storefront" style="cursor: pointer; border: none;">
+            <span>✏️ Edit Operations & Contact Specs</span>
+          </button>
         </div>
 
         <div class="settings-card-grid">
           <div class="settings-card">
             <h4>📅 Opening Hours Schedule</h4>
             <ul>
-              <li><strong>Monday – Saturday:</strong> 11:00 AM – 10:00 PM PKT</li>
-              <li><strong>Sunday:</strong> Closed (Weekly Roaster Maintenance)</li>
+              <li><strong>Monday – Saturday:</strong> <span id="adminWeekdayHours">11:00 AM – 10:00 PM PKT</span></li>
+              <li><strong>Sunday:</strong> <span id="adminSundayHours">Closed (Weekly Roaster Maintenance)</span></li>
             </ul>
           </div>
 
           <div class="settings-card">
             <h4>📍 Faisalabad Roastery Address</h4>
-            <p>Street 15, Saifabad No. 1, Faisalabad, Punjab, Pakistan</p>
+            <p id="adminAddressText">Street 15, Saifabad No. 1, Faisalabad, Punjab, Pakistan</p>
             <small>Interactive Google Map embedded on customer site</small>
           </div>
 
           <div class="settings-card">
             <h4>📱 WhatsApp Hotline & Inquiries</h4>
-            <p><strong>Hotline:</strong> +92 300 1234567</p>
-            <p><strong>Support Email:</strong> info@auraroasters.com</p>
+            <p><strong>Hotline:</strong> <span id="adminHotlineText">+92 300 1234567</span></p>
+            <p><strong>Support Email:</strong> <span id="adminEmailText">info@auraroasters.com</span></p>
           </div>
+        </div>
+      </section>
+
+      <!-- Edit Operations & Specs Modal Dialog -->
+      <dialog id="editSpecsModal" class="admin-dialog">
+        <div class="admin-modal-card">
+          <div class="modal-header">
+            <h3>Edit Roastery Operations & Hotline Specs</h3>
+            <button id="closeEditSpecsModalBtn" class="modal-close">&times;</button>
+          </div>
+          <form id="editSpecsForm" onsubmit="return false;" class="admin-form">
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Monday – Saturday Hours *</label>
+                <input type="text" id="specWeekdayHours" placeholder="e.g. 11:00 AM – 10:00 PM PKT" required>
+              </div>
+              <div class="form-group">
+                <label>Sunday Schedule *</label>
+                <input type="text" id="specSundayHours" placeholder="e.g. Closed (Roaster Maintenance)" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Roastery Street Address *</label>
+              <textarea id="specAddress" rows="2" placeholder="e.g. Street 15, Saifabad No. 1, Faisalabad, Punjab, Pakistan" required></textarea>
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>WhatsApp Display Hotline *</label>
+                <input type="text" id="specHotline" placeholder="e.g. +92 300 1234567" required>
+              </div>
+              <div class="form-group">
+                <label>Raw WhatsApp Number (For wa.me links, digits only) *</label>
+                <input type="text" id="specRawPhone" placeholder="e.g. 923001234567" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Support & Order Email *</label>
+              <input type="email" id="specEmail" placeholder="e.g. info@auraroasters.com" required>
+            </div>
+
+            <div class="modal-actions" style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
+              <button type="button" id="resetSpecsDefaultBtn" class="btn-cancel" style="margin-right: auto;">Reset Defaults</button>
+              <button type="button" id="cancelEditSpecsBtn" class="btn-cancel">Cancel</button>
+              <button type="submit" id="saveSpecsBtn" class="btn-storefront">Save & Sync to Website</button>
+            </div>
+          </form>
+        </div>
+      </dialog>
+
+      <!-- Customer Live Chat & Inquiries Section -->
+      <section class="admin-section" id="customerInquiriesSection">
+        <div class="section-top-bar">
+          <div class="section-heading-wrap">
+            <h2>💬 Customer Inquiries & Live Chat</h2>
+            <p>Direct questions and requests submitted by customers on the website (Roast advice, tables, custom orders).</p>
+          </div>
+          <div class="chat-admin-actions">
+            <span class="chat-status-pill">🟢 Live Support Active</span>
+            <button id="refreshInquiriesBtn" class="btn-refresh" title="Reload chats">
+              <svg viewBox="0 0 24 24" class="refresh-icon" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M23 4v6h-6"/><path d="M1 20v-6h6"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+              <span>Refresh</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="inquiries-container" id="inquiriesContainer">
+          <!-- Dynamically populated by admin.js -->
+        </div>
+      </section>
+
+      <!-- Customer Star Reviews Management Section -->
+      <section class="admin-section" id="customerReviewsSection">
+        <div class="section-top-bar">
+          <div class="section-heading-wrap">
+            <h2>⭐ Customer Star Reviews & Feedback</h2>
+            <p>Ratings and reviews submitted by coffee lovers on the website.</p>
+          </div>
+          <div class="rating-overview-badge">
+            <span class="star-gold">★</span>
+            <strong id="adminAvgRating">5.0</strong>
+            <span id="adminTotalReviewsCount">(3 Reviews)</span>
+          </div>
+        </div>
+
+        <div class="reviews-admin-grid" id="reviewsAdminGrid">
+          <!-- Dynamically populated by admin.js -->
         </div>
       </section>
 
