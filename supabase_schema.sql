@@ -21,8 +21,16 @@ CREATE TABLE IF NOT EXISTS public.orders (
     total NUMERIC NOT NULL DEFAULT 0,
     status TEXT NOT NULL DEFAULT 'Pending',
     time TEXT,
+    payment_method TEXT,
+    payment_status TEXT,
+    transaction_ref TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
+
+-- Ensure columns exist if table was already created
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS payment_method TEXT;
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS payment_status TEXT;
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS transaction_ref TEXT;
 
 -- Enable RLS on Orders
 ALTER TABLE public.orders ENABLE ROW LEVEL SECURITY;
@@ -279,3 +287,4 @@ ON CONFLICT (id) DO NOTHING;
 GRANT USAGE ON SCHEMA public TO anon, authenticated;
 GRANT ALL ON ALL TABLES IN SCHEMA public TO anon, authenticated;
 GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated;
+

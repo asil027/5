@@ -841,12 +841,159 @@
           </details>
         </div>
 
+        <!-- PAYMENT METHOD SELECTOR -->
+        <div class="payment-method-section">
+          <label class="form-label" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <span style="font-weight: 700; color: var(--gold-light);">💳 Choose Payment Method *</span>
+            <span class="secure-badge" style="font-size: 0.72rem; color: #10b981; font-weight: 600;">🔒 256-Bit Encrypted</span>
+          </label>
+
+          <!-- Payment Tabs -->
+          <div class="payment-method-tabs" id="paymentMethodTabs">
+            <button type="button" class="pay-tab-btn active" data-method="card">
+              <span class="pay-tab-icon">💳</span>
+              <span>Card</span>
+            </button>
+            <button type="button" class="pay-tab-btn" data-method="jazzcash">
+              <span class="pay-tab-icon">📱</span>
+              <span>JazzCash</span>
+            </button>
+            <button type="button" class="pay-tab-btn" data-method="easypaisa">
+              <span class="pay-tab-icon">🟢</span>
+              <span>EasyPaisa</span>
+            </button>
+            <button type="button" class="pay-tab-btn" data-method="raast">
+              <span class="pay-tab-icon">🏛️</span>
+              <span>Raast/Bank</span>
+            </button>
+            <button type="button" class="pay-tab-btn" data-method="cod">
+              <span class="pay-tab-icon">💵</span>
+              <span>Pay on Pickup</span>
+            </button>
+          </div>
+          <input type="hidden" id="selectedPaymentMethod" value="card">
+
+          <!-- 1. Card Payment Details Panel -->
+          <div class="payment-panel active" id="cardPaymentPanel">
+            <div class="credit-card-preview">
+              <div class="card-chip"></div>
+              <div class="card-brand-logo" id="cardBrandLogo">VISA / MC</div>
+              <div class="card-number-display" id="cardNumberDisplay">•••• •••• •••• ••••</div>
+              <div class="card-meta-row">
+                <span id="cardHolderDisplay">CARDHOLDER NAME</span>
+                <span id="cardExpiryDisplay">MM/YY</span>
+              </div>
+            </div>
+            <div class="card-inputs-grid">
+              <div class="form-group">
+                <label class="pay-label">Card Number *</label>
+                <input type="text" id="payCardNumber" class="form-input" placeholder="4242 4242 4242 4242" maxlength="19">
+              </div>
+              <div class="form-group">
+                <label class="pay-label">Cardholder Name *</label>
+                <input type="text" id="payCardName" class="form-input" placeholder="e.g. Ali Raza">
+              </div>
+              <div class="form-group-row">
+                <div class="form-group">
+                  <label class="pay-label">Expires *</label>
+                  <input type="text" id="payCardExpiry" class="form-input" placeholder="MM/YY" maxlength="5">
+                </div>
+                <div class="form-group">
+                  <label class="pay-label">CVC *</label>
+                  <input type="password" id="payCardCvc" class="form-input" placeholder="•••" maxlength="4">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. JazzCash Payment Panel -->
+          <div class="payment-panel" id="jazzcashPaymentPanel">
+            <div class="wallet-info-box jazzcash-box">
+              <div class="wallet-header">
+                <strong>📱 AURA Official JazzCash Till</strong>
+                <span class="wallet-badge">Instant Verification</span>
+              </div>
+              <div class="wallet-number-row">
+                <span class="wallet-label">Mobile Account / Till:</span>
+                <strong class="wallet-val" id="jazzcashAccountDisplay">0300 1234567</strong>
+              </div>
+              <div class="wallet-title-row">
+                <span class="wallet-label">Account Title:</span>
+                <strong class="wallet-val">AURA Coffee Roasters</strong>
+              </div>
+              <p class="wallet-instructions">
+                Send <strong id="jazzcashAmountDisplay">Rs. 600</strong> to our JazzCash account above, then enter your Sender Number or 6-digit TID below:
+              </p>
+            </div>
+            <div class="form-group">
+              <label class="pay-label">Your JazzCash Mobile Number or Transaction ID (TID) *</label>
+              <input type="text" id="jazzcashSenderRef" class="form-input" placeholder="e.g. 0301-XXXXXXX or TID #928374">
+            </div>
+          </div>
+
+          <!-- 3. EasyPaisa Payment Panel -->
+          <div class="payment-panel" id="easypaisaPaymentPanel">
+            <div class="wallet-info-box easypaisa-box">
+              <div class="wallet-header">
+                <strong>🟢 AURA Official EasyPaisa Account</strong>
+                <span class="wallet-badge">Instant Transfer</span>
+              </div>
+              <div class="wallet-number-row">
+                <span class="wallet-label">EasyPaisa Account:</span>
+                <strong class="wallet-val" id="easypaisaAccountDisplay">0300 1234567</strong>
+              </div>
+              <div class="wallet-title-row">
+                <span class="wallet-label">Account Title:</span>
+                <strong class="wallet-val">AURA Coffee Roasters</strong>
+              </div>
+              <p class="wallet-instructions">
+                Transfer <strong id="easypaisaAmountDisplay">Rs. 600</strong> via EasyPaisa App or USSD, then enter your Sender Number or Transaction ID below:
+              </p>
+            </div>
+            <div class="form-group">
+              <label class="pay-label">Your EasyPaisa Mobile Number or Transaction ID *</label>
+              <input type="text" id="easypaisaSenderRef" class="form-input" placeholder="e.g. 0345-XXXXXXX or TID #837261">
+            </div>
+          </div>
+
+          <!-- 4. Bank Transfer / Raast Panel -->
+          <div class="payment-panel" id="raastPaymentPanel">
+            <div class="wallet-info-box bank-box">
+              <div class="wallet-header">
+                <strong>🏛️ Bank Transfer / Raast Instant IBFT</strong>
+                <span class="wallet-badge">Zero Fee</span>
+              </div>
+              <div class="bank-details-grid">
+                <div><span>Bank:</span> <strong id="bankNameDisplay">Meezan Bank Ltd</strong></div>
+                <div><span>Title:</span> <strong id="bankTitleDisplay">AURA Coffee Roasters</strong></div>
+                <div><span>IBAN:</span> <strong id="bankIbanDisplay">PK36MEZN00012345678901</strong></div>
+                <div><span>Raast ID:</span> <strong id="bankRaastDisplay">03001234567</strong></div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="pay-label">Your Sender Name / Bank Transaction Ref (RRN) *</label>
+              <input type="text" id="raastSenderRef" class="form-input" placeholder="e.g. Ali Raza / Ref #1294829">
+            </div>
+          </div>
+
+          <!-- 5. Cash on Pickup / Counter Panel -->
+          <div class="payment-panel" id="codPaymentPanel">
+            <div class="cod-info-box">
+              <div class="cod-icon">☕</div>
+              <div>
+                <strong>Pay at Roastery Counter</strong>
+                <p>Pay comfortably with cash or card upon receiving your order at Saifabad Roastery.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Streamlined Action Buttons -->
         <div class="order-actions-section">
           <!-- Primary: 1-Click Instant Order Placement -->
           <button type="button" id="confirmPlaceOrderBtn" class="btn-primary-order">
-            <span class="btn-order-title">☕ Confirm & Place Order</span>
-            <span class="btn-order-sub">Instant store receipt • Pay Cash or Card on arrival</span>
+            <span class="btn-order-title" id="placeOrderBtnTitle">💳 Pay Rs. 600 & Place Order</span>
+            <span class="btn-order-sub" id="placeOrderBtnSub">Instant digital receipt • Verified online transaction</span>
           </button>
 
           <!-- Secondary: Direct WhatsApp Order Option -->
@@ -859,8 +1006,8 @@
             </button>
           </div>
 
-          <p class="order-disclaimer">
-            🔒 No advance payment needed online. Pay comfortably upon receiving your coffee.
+          <p class="order-disclaimer" id="orderDisclaimerText">
+            🔒 256-bit SSL encrypted online payment. Your credentials are securely protected.
           </p>
         </div>
       </form>
@@ -892,11 +1039,19 @@
             <span id="successOrderType">Takeaway Pickup</span>
           </div>
           <div class="success-receipt-row">
+            <span>Payment Method:</span>
+            <strong id="successPaymentMethod" style="color: #34d399;">💳 Debit Card (Paid Online)</strong>
+          </div>
+          <div class="success-receipt-row">
+            <span>Transaction Ref:</span>
+            <strong id="successTxnRef" style="font-family: monospace; color: var(--gold-light);">#TXN-84920</strong>
+          </div>
+          <div class="success-receipt-row">
             <span>Status:</span>
             <span class="badge-tag gold">Pending • Sent to Barista</span>
           </div>
           <div class="success-receipt-row highlight">
-            <span>Total to Pay:</span>
+            <span id="successTotalLabel">Total Paid:</span>
             <span id="successOrderTotal">Rs. 600</span>
           </div>
         </div>

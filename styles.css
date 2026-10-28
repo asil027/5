@@ -3115,3 +3115,266 @@ button {
   }
 }
 
+/* ==========================================================================
+   ONLINE PAYMENT SYSTEM & SMART CHECKOUT
+   ========================================================================== */
+.payment-method-section {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(212, 151, 70, 0.2);
+}
+
+.payment-method-tabs {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.45rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.pay-tab-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(212, 151, 70, 0.25);
+  border-radius: 8px;
+  padding: 0.65rem 0.25rem;
+  color: #c9bba8;
+  cursor: pointer;
+  font-size: 0.74rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.pay-tab-btn .pay-tab-icon {
+  font-size: 1.15rem;
+}
+
+.pay-tab-btn:hover {
+  background: rgba(212, 151, 70, 0.12);
+  border-color: var(--gold);
+  color: #fff;
+}
+
+.pay-tab-btn.active {
+  background: linear-gradient(135deg, rgba(212, 151, 70, 0.25), rgba(184, 115, 51, 0.3));
+  border-color: var(--gold);
+  color: #f7e7ce;
+  box-shadow: 0 0 12px rgba(212, 151, 70, 0.35);
+}
+
+.payment-panel {
+  display: none;
+  animation: fadeInPay 0.25s ease forwards;
+}
+
+.payment-panel.active {
+  display: block;
+}
+
+@keyframes fadeInPay {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Card Visual & Inputs */
+.credit-card-preview {
+  background: linear-gradient(135deg, #1f140b 0%, #3a2212 50%, #160d07 100%);
+  border: 1px solid rgba(212, 151, 70, 0.45);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  color: #f7e7ce;
+  font-family: 'Plus Jakarta Sans', monospace, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.credit-card-preview::before {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 140px;
+  height: 140px;
+  background: radial-gradient(circle, rgba(212, 151, 70, 0.25), transparent 70%);
+  border-radius: 50%;
+}
+
+.card-chip {
+  width: 36px;
+  height: 26px;
+  background: linear-gradient(135deg, #d4af37, #aa7c11);
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.card-brand-logo {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 1.5px;
+  color: #d49746;
+}
+
+.card-number-display {
+  font-size: 1.15rem;
+  letter-spacing: 3px;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+}
+
+.card-meta-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  color: #c4b5a3;
+  text-transform: uppercase;
+}
+
+.card-inputs-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.form-group-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.pay-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #dfd3c3;
+  margin-bottom: 0.3rem;
+}
+
+/* Wallet Info Boxes */
+.wallet-info-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(212, 151, 70, 0.3);
+  border-radius: 10px;
+  padding: 1rem 1.15rem;
+  margin-bottom: 1rem;
+}
+
+.jazzcash-box {
+  border-color: rgba(220, 38, 38, 0.35);
+  background: rgba(220, 38, 38, 0.05);
+}
+
+.easypaisa-box {
+  border-color: rgba(16, 185, 129, 0.35);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.bank-box {
+  border-color: rgba(59, 130, 246, 0.35);
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.wallet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.65rem;
+  font-size: 0.9rem;
+  color: #ffffff;
+}
+
+.wallet-badge {
+  font-size: 0.68rem;
+  background: rgba(212, 151, 70, 0.15);
+  color: #d49746;
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  font-weight: 600;
+}
+
+.wallet-number-row, .wallet-title-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+}
+
+.wallet-label {
+  color: #a89a88;
+}
+
+.wallet-val {
+  color: #f7e7ce;
+  font-family: monospace;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+.wallet-instructions {
+  font-size: 0.78rem;
+  color: #c9bba8;
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  line-height: 1.45;
+}
+
+.bank-details-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: #c9bba8;
+}
+
+.bank-details-grid strong {
+  color: #f7e7ce;
+  font-family: monospace;
+}
+
+.cod-info-box {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  background: rgba(212, 151, 70, 0.08);
+  border: 1px solid rgba(212, 151, 70, 0.25);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.cod-icon {
+  font-size: 1.8rem;
+}
+
+.cod-info-box strong {
+  display: block;
+  font-size: 0.9rem;
+  color: #fff;
+  margin-bottom: 0.2rem;
+}
+
+.cod-info-box p {
+  font-size: 0.78rem;
+  color: #bdae9c;
+  margin: 0;
+  line-height: 1.4;
+}
+
+@media (max-width: 600px) {
+  .payment-method-tabs {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+

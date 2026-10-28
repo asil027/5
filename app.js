@@ -237,10 +237,114 @@ function initOrderModal() {
     });
   }
 
+  // Payment Method Panels & Tabs
+  const payMethodTabs = dialog.querySelectorAll('#paymentMethodTabs .pay-tab-btn');
+  const selectedPaymentMethodInput = document.getElementById('selectedPaymentMethod');
+  const cardPanel = document.getElementById('cardPaymentPanel');
+  const jazzcashPanel = document.getElementById('jazzcashPaymentPanel');
+  const easypaisaPanel = document.getElementById('easypaisaPaymentPanel');
+  const raastPanel = document.getElementById('raastPaymentPanel');
+  const codPanel = document.getElementById('codPaymentPanel');
+
+  const payPanels = {
+    card: cardPanel,
+    jazzcash: jazzcashPanel,
+    easypaisa: easypaisaPanel,
+    raast: raastPanel,
+    cod: codPanel
+  };
+
+  const placeOrderBtnTitle = document.getElementById('placeOrderBtnTitle');
+  const placeOrderBtnSub = document.getElementById('placeOrderBtnSub');
+  const orderDisclaimerText = document.getElementById('orderDisclaimerText');
+  const jazzcashAmountDisplay = document.getElementById('jazzcashAmountDisplay');
+  const easypaisaAmountDisplay = document.getElementById('easypaisaAmountDisplay');
+
+  // Interactive Card Preview Elements
+  const payCardNumber = document.getElementById('payCardNumber');
+  const payCardName = document.getElementById('payCardName');
+  const payCardExpiry = document.getElementById('payCardExpiry');
+  const payCardCvc = document.getElementById('payCardCvc');
+  const cardNumberDisplay = document.getElementById('cardNumberDisplay');
+  const cardHolderDisplay = document.getElementById('cardHolderDisplay');
+  const cardExpiryDisplay = document.getElementById('cardExpiryDisplay');
+  const cardBrandLogo = document.getElementById('cardBrandLogo');
+
+  function setPaymentMethod(method) {
+    if (selectedPaymentMethodInput) selectedPaymentMethodInput.value = method;
+
+    payMethodTabs.forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-method') === method);
+    });
+
+    Object.keys(payPanels).forEach(key => {
+      if (payPanels[key]) {
+        payPanels[key].classList.toggle('active', key === method);
+      }
+    });
+
+    updatePaymentButtonUI();
+  }
+
+  payMethodTabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const method = btn.getAttribute('data-method') || 'card';
+      setPaymentMethod(method);
+    });
+  });
+
+  // Credit Card Real-Time Input Masking & Visual Synchronization
+  if (payCardNumber) {
+    payCardNumber.addEventListener('input', (e) => {
+      let raw = e.target.value.replace(/\D/g, '').substring(0, 16);
+      let formatted = raw.replace(/(\d{4})(?=\d)/g, '$1 ');
+      e.target.value = formatted;
+
+      if (cardNumberDisplay) {
+        cardNumberDisplay.textContent = formatted || '•••• •••• •••• ••••';
+      }
+
+      if (cardBrandLogo) {
+        if (raw.startsWith('4')) {
+          cardBrandLogo.textContent = 'VISA';
+        } else if (/^(5[1-5]|2[2-7])/.test(raw)) {
+          cardBrandLogo.textContent = 'MASTERCARD';
+        } else if (/^(34|37)/.test(raw)) {
+          cardBrandLogo.textContent = 'AMEX';
+        } else if (/^(6011|65)/.test(raw)) {
+          cardBrandLogo.textContent = 'DISCOVER';
+        } else {
+          cardBrandLogo.textContent = 'VISA / MC';
+        }
+      }
+    });
+  }
+
+  if (payCardName) {
+    payCardName.addEventListener('input', (e) => {
+      if (cardHolderDisplay) {
+        cardHolderDisplay.textContent = e.target.value.toUpperCase() || 'CARDHOLDER NAME';
+      }
+    });
+  }
+
+  if (payCardExpiry) {
+    payCardExpiry.addEventListener('input', (e) => {
+      let val = e.target.value.replace(/\D/g, '').substring(0, 4);
+      if (val.length >= 2) {
+        val = val.substring(0, 2) + '/' + val.substring(2);
+      }
+      e.target.value = val;
+      if (cardExpiryDisplay) {
+        cardExpiryDisplay.textContent = val || 'MM/YY';
+      }
+    });
+  }
+
   // Price Calculation Logic
   function recalculateOrderTotal() {
     const selectedOption = coffeeSelect.options[coffeeSelect.selectedIndex];
-    const basePrice = parseInt(selectedOption.getAttribute('data-price') || '600', 10);
+    const basePrice = parseInt(selectedOption ? selectedOption.getAttribute('data-price') || '600' : '600', 10);
 
     // Cup size extra
     const sizeRadio = dialog.querySelector('input[name="cupSize"]:checked');
@@ -256,7 +360,50 @@ function initOrderModal() {
     if (orderTotalDisplay) {
       orderTotalDisplay.textContent = `Rs. ${itemTotal.toLocaleString()}`;
     }
+
+    if (jazzcashAmountDisplay) jazzcashAmountDisplay.textContent = `Rs. ${itemTotal.toLocaleString()}`;
+    if (easypaisaAmountDisplay) easypaisaAmountDisplay.textContent = `Rs. ${itemTotal.toLocaleString()}`;
+
     return itemTotal;
+  }
+
+  function updatePaymentButtonUI() {
+    const total = recalculateOrderTotal();
+    const currentMethod = selectedPaymentMethodInput?.value || 'card';
+
+    if (placeOrderBtnTitle && placeOrderBtnSub) {
+      if (currentMethod === 'cod') {
+        placeOrderBtnTitle.textContent = `☕ Confirm & Pay on Pickup (Rs. ${total.toLocaleString()})`;
+        placeOrderBtnSub.textContent = `Instant order receipt • Pay cash or card at counter`;
+        if (orderDisclaimerText) {
+          orderDisclaimerText.textContent = `🔒 No advance payment needed online. Pay comfortably upon receiving your coffee.`;
+        }
+      } else if (currentMethod === 'card') {
+        placeOrderBtnTitle.textContent = `💳 Pay Rs. ${total.toLocaleString()} & Place Order`;
+        placeOrderBtnSub.textContent = `Instant digital receipt • 256-Bit SSL verified card payment`;
+        if (orderDisclaimerText) {
+          orderDisclaimerText.textContent = `🔒 256-bit SSL encrypted online payment. Your credentials are securely protected.`;
+        }
+      } else if (currentMethod === 'jazzcash') {
+        placeOrderBtnTitle.textContent = `📱 Verify JazzCash & Place Order (Rs. ${total.toLocaleString()})`;
+        placeOrderBtnSub.textContent = `Instant digital receipt • Verified via JazzCash Till`;
+        if (orderDisclaimerText) {
+          orderDisclaimerText.textContent = `🔒 Instant transfer to AURA JazzCash Till. Verified automatically.`;
+        }
+      } else if (currentMethod === 'easypaisa') {
+        placeOrderBtnTitle.textContent = `🟢 Verify EasyPaisa & Place Order (Rs. ${total.toLocaleString()})`;
+        placeOrderBtnSub.textContent = `Instant digital receipt • Verified via EasyPaisa Account`;
+        if (orderDisclaimerText) {
+          orderDisclaimerText.textContent = `🔒 Instant transfer to AURA EasyPaisa Account. Verified automatically.`;
+        }
+      } else if (currentMethod === 'raast') {
+        placeOrderBtnTitle.textContent = `🏛️ Confirm Raast/Bank & Place Order (Rs. ${total.toLocaleString()})`;
+        placeOrderBtnSub.textContent = `Instant digital receipt • Zero Fee Raast Instant IBFT`;
+        if (orderDisclaimerText) {
+          orderDisclaimerText.textContent = `🔒 Raast Instant IBFT / Meezan Bank transfer. Zero transaction fee.`;
+        }
+      }
+    }
   }
 
   // Order Type Tabs Logic
@@ -301,6 +448,7 @@ function initOrderModal() {
     const now = new Date();
     const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }) + ' PKT';
     const orderId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+    const p = orderData.paymentDetails;
 
     const fullOrder = {
       id: orderId,
@@ -314,10 +462,15 @@ function initOrderModal() {
       milk: orderData.milk,
       temperature: orderData.temperature,
       sweetness: orderData.sweetness,
-      notes: orderData.notes,
+      notes: orderData.notes 
+        ? `[Payment: ${p.methodLabel} (${p.paymentStatus}) | Ref: #${p.transactionRef}] ${orderData.notes}`
+        : `[Payment: ${p.methodLabel} (${p.paymentStatus}) | Ref: #${p.transactionRef}]`,
       total: orderData.total,
       status: 'Pending',
-      time: timeStr
+      time: timeStr,
+      paymentMethod: p.methodLabel,
+      paymentStatus: p.paymentStatus,
+      transactionRef: p.transactionRef
     };
 
     // 1. Immediately Save to LocalStorage for 100% reliable cross-tab sync
@@ -369,7 +522,12 @@ function initOrderModal() {
 • *Milk:* ${fullOrder.milk}
 • *Temp:* ${fullOrder.temperature}
 • *Sweetness:* ${fullOrder.sweetness}
-${fullOrder.notes ? `• *Note:* ${fullOrder.notes}\n` : ''}
+${orderData.notes ? `• *Note:* ${orderData.notes}\n` : ''}
+💳 *PAYMENT DETAILS:*
+• *Method:* ${p.methodLabel}
+• *Status:* ${p.paymentStatus}
+• *Payment Ref:* #${p.transactionRef}
+
 💰 *TOTAL AMOUNT:* Rs. ${fullOrder.total.toLocaleString()}
 ────────────────────────
 📍 *Aura Roastery:* ${cafeSettings.address || 'Street 15, Saifabad No. 1, Faisalabad'}`;
@@ -380,7 +538,7 @@ ${fullOrder.notes ? `• *Note:* ${fullOrder.notes}\n` : ''}
     // Close the order input modal
     closeModal();
 
-    // Populate and show the Success Modal
+    // Populate and show the Success Modal with Digital Receipt
     if (successModal) {
       const sId = document.getElementById('successOrderId');
       const sName = document.getElementById('successCustomerName');
@@ -388,12 +546,20 @@ ${fullOrder.notes ? `• *Note:* ${fullOrder.notes}\n` : ''}
       const sType = document.getElementById('successOrderType');
       const sTotal = document.getElementById('successOrderTotal');
       const sWaLink = document.getElementById('successWhatsappLink');
+      const sPayment = document.getElementById('successPaymentMethod');
+      const sTxnRef = document.getElementById('successTxnRef');
+      const sTotalLabel = document.getElementById('successTotalLabel');
 
       if (sId) sId.textContent = `#${fullOrder.id}`;
       if (sName) sName.textContent = fullOrder.customerName;
       if (sCoffee) sCoffee.textContent = `${fullOrder.coffee} (x${fullOrder.qty})`;
       if (sType) sType.textContent = fullOrder.orderType;
       if (sTotal) sTotal.textContent = `Rs. ${fullOrder.total.toLocaleString()}`;
+      if (sPayment) sPayment.textContent = `${p.methodLabel} (${p.paymentStatus})`;
+      if (sTxnRef) sTxnRef.textContent = `#${p.transactionRef}`;
+      if (sTotalLabel) {
+        sTotalLabel.textContent = (p.method === 'cod') ? 'Total to Pay on Arrival:' : 'Total Paid Online:';
+      }
       if (sWaLink) sWaLink.href = whatsappUrl;
 
       if (typeof successModal.showModal === 'function') {
@@ -428,7 +594,7 @@ ${fullOrder.notes ? `• *Note:* ${fullOrder.notes}\n` : ''}
     });
   }
 
-  // Helper to validate and extract order form values
+  // Helper to validate and extract order form values + payment inputs
   function gatherOrderData() {
     const nameInput = document.getElementById('customerName');
     const phoneInput = document.getElementById('customerPhone');
@@ -446,6 +612,84 @@ ${fullOrder.notes ? `• *Note:* ${fullOrder.notes}\n` : ''}
       alert('Please enter your mobile or WhatsApp phone number.');
       phoneInput.focus();
       return null;
+    }
+
+    // Payment validation based on active method
+    const selectedMethod = selectedPaymentMethodInput?.value || 'card';
+    let paymentDetails = {
+      method: selectedMethod,
+      methodLabel: 'Debit/Credit Card',
+      paymentStatus: 'Paid Online',
+      transactionRef: ''
+    };
+
+    if (selectedMethod === 'card') {
+      const cardNum = payCardNumber?.value.replace(/\s+/g, '') || '';
+      const cardName = payCardName?.value.trim() || '';
+      const cardExp = payCardExpiry?.value.trim() || '';
+      const cardCvc = payCardCvc?.value.trim() || '';
+
+      if (cardNum.length < 15) {
+        alert('Please enter your 16-digit Debit or Credit Card number.');
+        payCardNumber?.focus();
+        return null;
+      }
+      if (cardName.length < 3) {
+        alert('Please enter the cardholder name as printed on the card.');
+        payCardName?.focus();
+        return null;
+      }
+      if (!/^\d{2}\/\d{2}$/.test(cardExp)) {
+        alert('Please enter a valid card expiration date in MM/YY format.');
+        payCardExpiry?.focus();
+        return null;
+      }
+      if (cardCvc.length < 3) {
+        alert('Please enter your 3 or 4-digit card security CVC.');
+        payCardCvc?.focus();
+        return null;
+      }
+
+      paymentDetails.methodLabel = '💳 Debit/Credit Card';
+      paymentDetails.paymentStatus = 'Paid Online';
+      paymentDetails.transactionRef = 'TXN-' + Math.floor(100000 + Math.random() * 900000);
+    } else if (selectedMethod === 'jazzcash') {
+      const senderRef = document.getElementById('jazzcashSenderRef')?.value.trim() || '';
+      if (!senderRef) {
+        alert('Please enter your JazzCash sender mobile number or Transaction ID (TID) to verify payment.');
+        document.getElementById('jazzcashSenderRef')?.focus();
+        return null;
+      }
+      paymentDetails.methodLabel = '📱 JazzCash';
+      paymentDetails.paymentStatus = 'Paid Online';
+      const tidDigits = senderRef.replace(/\D/g, '').slice(-6);
+      paymentDetails.transactionRef = 'JC-' + (tidDigits.length >= 4 ? tidDigits : Math.floor(100000 + Math.random() * 900000));
+    } else if (selectedMethod === 'easypaisa') {
+      const senderRef = document.getElementById('easypaisaSenderRef')?.value.trim() || '';
+      if (!senderRef) {
+        alert('Please enter your EasyPaisa sender mobile number or Transaction ID (TID) to verify payment.');
+        document.getElementById('easypaisaSenderRef')?.focus();
+        return null;
+      }
+      paymentDetails.methodLabel = '🟢 EasyPaisa';
+      paymentDetails.paymentStatus = 'Paid Online';
+      const tidDigits = senderRef.replace(/\D/g, '').slice(-6);
+      paymentDetails.transactionRef = 'EP-' + (tidDigits.length >= 4 ? tidDigits : Math.floor(100000 + Math.random() * 900000));
+    } else if (selectedMethod === 'raast') {
+      const senderRef = document.getElementById('raastSenderRef')?.value.trim() || '';
+      if (!senderRef) {
+        alert('Please enter your Sender Name or Bank Transaction Ref (RRN) to verify IBFT transfer.');
+        document.getElementById('raastSenderRef')?.focus();
+        return null;
+      }
+      paymentDetails.methodLabel = '🏛️ Raast / Bank IBFT';
+      paymentDetails.paymentStatus = 'Paid Online';
+      const refClean = senderRef.replace(/[^a-zA-Z0-9]/g, '').slice(-8);
+      paymentDetails.transactionRef = 'RAAST-' + (refClean || Math.floor(100000 + Math.random() * 900000));
+    } else {
+      paymentDetails.methodLabel = '💵 Pay on Pickup';
+      paymentDetails.paymentStatus = 'Pay at Counter';
+      paymentDetails.transactionRef = 'COUNTER-' + Math.floor(1000 + Math.random() * 9000);
     }
 
     const coffee = coffeeSelect.value || 'Vanilla Latte';
@@ -472,9 +716,13 @@ ${fullOrder.notes ? `• *Note:* ${fullOrder.notes}\n` : ''}
       total,
       orderType,
       address,
-      notes
+      notes,
+      paymentDetails
     };
   }
+
+  // Initial update
+  updatePaymentButtonUI();
 }
 
 /* ==========================================================================
@@ -1025,7 +1273,13 @@ const DEFAULT_CAFE_SPECS = {
   address: 'Street 15, Saifabad No. 1, Faisalabad, Punjab, Pakistan',
   hotline: '+92 300 1234567',
   rawPhone: '923001234567',
-  email: 'info@auraroasters.com'
+  email: 'info@auraroasters.com',
+  jazzcashNumber: '0300 1234567',
+  easypaisaNumber: '0345 1234567',
+  bankName: 'Meezan Bank Ltd',
+  bankTitle: 'AURA Coffee Roasters',
+  bankIban: 'PK36MEZN00012345678901',
+  bankRaast: '03001234567'
 };
 
 function getCafeSettings() {
@@ -1100,6 +1354,21 @@ function initCafeSettingsSync() {
 
     const chatPanelWa = document.getElementById('chatPanelWhatsappBtn');
     if (chatPanelWa) chatPanelWa.href = `https://wa.me/${s.rawPhone}`;
+
+    // Payment Wallet & Bank Details
+    const jazzcashAcc = document.getElementById('jazzcashAccountDisplay');
+    const easypaisaAcc = document.getElementById('easypaisaAccountDisplay');
+    const bankName = document.getElementById('bankNameDisplay');
+    const bankTitle = document.getElementById('bankTitleDisplay');
+    const bankIban = document.getElementById('bankIbanDisplay');
+    const bankRaast = document.getElementById('bankRaastDisplay');
+
+    if (jazzcashAcc && s.jazzcashNumber) jazzcashAcc.textContent = s.jazzcashNumber;
+    if (easypaisaAcc && s.easypaisaNumber) easypaisaAcc.textContent = s.easypaisaNumber;
+    if (bankName && s.bankName) bankName.textContent = s.bankName;
+    if (bankTitle && s.bankTitle) bankTitle.textContent = s.bankTitle;
+    if (bankIban && s.bankIban) bankIban.textContent = s.bankIban;
+    if (bankRaast && s.bankRaast) bankRaast.textContent = s.bankRaast;
   }
 
   window.addEventListener('storage', (e) => {

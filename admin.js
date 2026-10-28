@@ -219,10 +219,33 @@ function initOrdersManager() {
         `Hello ${order.customerName}! This is Aura Coffee Roasters regarding your order #${order.id} for ${order.coffee}. Your current status is: ${order.status}.`
       )}`;
 
+      // Payment method, status & transaction reference detection
+      let payMethod = order.paymentMethod || 'Pay on Pickup';
+      let payStatus = order.paymentStatus || 'Pay at Counter';
+      let payRef = order.transactionRef || '';
+
+      if (!order.paymentMethod && order.notes && order.notes.includes('[Payment:')) {
+        const m = order.notes.match(/\[Payment:\s*([^|(]+)(?:\(([^)]+)\))?\s*\|\s*Ref:\s*([^\]]+)\]/);
+        if (m) {
+          payMethod = m[1].trim();
+          payStatus = m[2] ? m[2].trim() : 'Paid Online';
+          payRef = m[3].trim();
+        }
+      }
+
+      let payBadgeClass = 'pay-cod';
+      const lowMethod = payMethod.toLowerCase();
+      if (lowMethod.includes('card')) payBadgeClass = 'pay-card';
+      else if (lowMethod.includes('jazzcash')) payBadgeClass = 'pay-jazzcash';
+      else if (lowMethod.includes('easypaisa')) payBadgeClass = 'pay-easypaisa';
+      else if (lowMethod.includes('raast') || lowMethod.includes('bank')) payBadgeClass = 'pay-raast';
+
       tr.innerHTML = `
         <td>
           <span class="order-id-badge">#${order.id}</span>
           <span class="order-time-sub">${order.time || 'Today'}</span>
+          <span class="pay-badge ${payBadgeClass}">${escapeHtml(payMethod)}</span>
+          ${payRef ? `<span class="order-pay-ref">Ref: ${escapeHtml(payRef)}</span>` : ''}
         </td>
         <td>
           <span class="customer-name">${escapeHtml(order.customerName)}</span>
@@ -241,7 +264,7 @@ function initOrdersManager() {
         </td>
         <td>
           <span class="order-total-highlight">Rs. ${Number(order.total || 0).toLocaleString()}</span>
-          <span class="order-qty-sub">Qty: ${order.qty || 1}</span>
+          <span class="order-qty-sub">Qty: ${order.qty || 1} • <strong style="color: ${payStatus.includes('Paid') ? '#34d399' : '#fbbf24'}">${escapeHtml(payStatus)}</strong></span>
         </td>
         <td>
           <select class="status-select ${statusClass}" data-id="${order.id}">
@@ -663,7 +686,13 @@ const DEFAULT_SPECS = {
   address: 'Street 15, Saifabad No. 1, Faisalabad, Punjab, Pakistan',
   hotline: '+92 300 1234567',
   rawPhone: '923001234567',
-  email: 'info@auraroasters.com'
+  email: 'info@auraroasters.com',
+  jazzcashNumber: '0300 1234567',
+  easypaisaNumber: '0345 1234567',
+  bankName: 'Meezan Bank Ltd',
+  bankTitle: 'AURA Coffee Roasters',
+  bankIban: 'PK36MEZN00012345678901',
+  bankRaast: '03001234567'
 };
 
 function initCafeSpecsManager() {
@@ -679,6 +708,9 @@ function initCafeSpecsManager() {
   const elAddress = document.getElementById('adminAddressText');
   const elHotline = document.getElementById('adminHotlineText');
   const elEmail = document.getElementById('adminEmailText');
+  const elJazzcash = document.getElementById('adminJazzcashText');
+  const elEasypaisa = document.getElementById('adminEasypaisaText');
+  const elRaast = document.getElementById('adminRaastText');
 
   const inputWeekday = document.getElementById('specWeekdayHours');
   const inputSunday = document.getElementById('specSundayHours');
@@ -686,6 +718,12 @@ function initCafeSpecsManager() {
   const inputHotline = document.getElementById('specHotline');
   const inputRawPhone = document.getElementById('specRawPhone');
   const inputEmail = document.getElementById('specEmail');
+  const inputJazzcash = document.getElementById('specJazzcash');
+  const inputEasypaisa = document.getElementById('specEasypaisa');
+  const inputBankName = document.getElementById('specBankName');
+  const inputBankTitle = document.getElementById('specBankTitle');
+  const inputBankIban = document.getElementById('specBankIban');
+  const inputBankRaast = document.getElementById('specBankRaast');
 
   function getSpecs() {
     try {
@@ -702,6 +740,9 @@ function initCafeSpecsManager() {
     if (elAddress) elAddress.textContent = s.address;
     if (elHotline) elHotline.textContent = s.hotline;
     if (elEmail) elEmail.textContent = s.email;
+    if (elJazzcash) elJazzcash.textContent = s.jazzcashNumber || DEFAULT_SPECS.jazzcashNumber;
+    if (elEasypaisa) elEasypaisa.textContent = s.easypaisaNumber || DEFAULT_SPECS.easypaisaNumber;
+    if (elRaast) elRaast.textContent = `${s.bankName || 'Meezan'} / ${s.bankRaast || DEFAULT_SPECS.bankRaast}`;
   }
 
   function populateForm() {
@@ -712,6 +753,12 @@ function initCafeSpecsManager() {
     if (inputHotline) inputHotline.value = s.hotline;
     if (inputRawPhone) inputRawPhone.value = s.rawPhone;
     if (inputEmail) inputEmail.value = s.email;
+    if (inputJazzcash) inputJazzcash.value = s.jazzcashNumber || DEFAULT_SPECS.jazzcashNumber;
+    if (inputEasypaisa) inputEasypaisa.value = s.easypaisaNumber || DEFAULT_SPECS.easypaisaNumber;
+    if (inputBankName) inputBankName.value = s.bankName || DEFAULT_SPECS.bankName;
+    if (inputBankTitle) inputBankTitle.value = s.bankTitle || DEFAULT_SPECS.bankTitle;
+    if (inputBankIban) inputBankIban.value = s.bankIban || DEFAULT_SPECS.bankIban;
+    if (inputBankRaast) inputBankRaast.value = s.bankRaast || DEFAULT_SPECS.bankRaast;
   }
 
   if (openBtn && modal) {
@@ -749,7 +796,13 @@ function initCafeSpecsManager() {
         address: inputAddress.value.trim() || DEFAULT_SPECS.address,
         hotline: inputHotline.value.trim() || DEFAULT_SPECS.hotline,
         rawPhone: inputRawPhone.value.trim().replace(/\D/g, '') || DEFAULT_SPECS.rawPhone,
-        email: inputEmail.value.trim() || DEFAULT_SPECS.email
+        email: inputEmail.value.trim() || DEFAULT_SPECS.email,
+        jazzcashNumber: inputJazzcash ? inputJazzcash.value.trim() || DEFAULT_SPECS.jazzcashNumber : DEFAULT_SPECS.jazzcashNumber,
+        easypaisaNumber: inputEasypaisa ? inputEasypaisa.value.trim() || DEFAULT_SPECS.easypaisaNumber : DEFAULT_SPECS.easypaisaNumber,
+        bankName: inputBankName ? inputBankName.value.trim() || DEFAULT_SPECS.bankName : DEFAULT_SPECS.bankName,
+        bankTitle: inputBankTitle ? inputBankTitle.value.trim() || DEFAULT_SPECS.bankTitle : DEFAULT_SPECS.bankTitle,
+        bankIban: inputBankIban ? inputBankIban.value.trim() || DEFAULT_SPECS.bankIban : DEFAULT_SPECS.bankIban,
+        bankRaast: inputBankRaast ? inputBankRaast.value.trim() || DEFAULT_SPECS.bankRaast : DEFAULT_SPECS.bankRaast
       };
       localStorage.setItem('aura_cafe_settings', JSON.stringify(updated));
       if (window.AuraDB) {
@@ -758,7 +811,7 @@ function initCafeSpecsManager() {
       window.dispatchEvent(new CustomEvent('aura_settings_updated', { detail: updated }));
       renderSpecs();
       closeModal();
-      alert('✓ Cafe operational specs updated and synced to customer website!');
+      alert('✓ Cafe operational specs & payment accounts updated and synced to customer website!');
     });
   }
 

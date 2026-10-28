@@ -5,10 +5,10 @@
  */
 
 // --- 1. CONFIGURATION ---
-// Paste your Supabase Project URL and Anon/Publishable Key below:
+// Pre-configured live project credentials for AURA Coffee Roasters:
 const SUPABASE_CONFIG = {
-  url: 'https://YOUR_PROJECT_ID.supabase.co',
-  anonKey: 'YOUR_SUPABASE_ANON_KEY'
+  url: 'https://eaybxrlppmrashltaelg.supabase.co',
+  anonKey: 'sb_publishable_lt1_dLzC1HuaWU5KfDnQlQ_EVe_12ky'
 };
 
 // Also support dynamic configuration via localStorage or window override
@@ -75,23 +75,42 @@ async function dbFetchOrders(fallbackList) {
     if (error) throw error;
     if (data && Array.isArray(data) && data.length > 0) {
       // Map database snake_case back to camelCase expected by existing UI
-      return data.map(o => ({
-        id: o.id,
-        customerName: o.customer_name,
-        phone: o.phone,
-        orderType: o.order_type,
-        address: o.address,
-        coffee: o.coffee,
-        qty: o.qty,
-        cupSize: o.cup_size,
-        milk: o.milk,
-        temperature: o.temperature,
-        sweetness: o.sweetness,
-        notes: o.notes,
-        total: Number(o.total),
-        status: o.status,
-        time: o.time || (o.created_at ? new Date(o.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' PKT' : 'Recent')
-      }));
+      return data.map(o => {
+        let paymentMethod = o.payment_method;
+        let paymentStatus = o.payment_status;
+        let transactionRef = o.transaction_ref;
+
+        // If not in separate columns, extract from notes tag if present e.g. [Payment: Card (Paid Online) | Ref: #TXN-12345]
+        if (!paymentMethod && o.notes && o.notes.includes('[Payment:')) {
+          const match = o.notes.match(/\[Payment:\s*([^|(]+)(?:\(([^)]+)\))?\s*\|\s*Ref:\s*([^\]]+)\]/);
+          if (match) {
+            paymentMethod = match[1].trim();
+            paymentStatus = match[2] ? match[2].trim() : 'Paid Online';
+            transactionRef = match[3].trim();
+          }
+        }
+
+        return {
+          id: o.id,
+          customerName: o.customer_name,
+          phone: o.phone,
+          orderType: o.order_type,
+          address: o.address,
+          coffee: o.coffee,
+          qty: o.qty,
+          cupSize: o.cup_size,
+          milk: o.milk,
+          temperature: o.temperature,
+          sweetness: o.sweetness,
+          notes: o.notes,
+          total: Number(o.total),
+          status: o.status,
+          time: o.time || (o.created_at ? new Date(o.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' PKT' : 'Recent'),
+          paymentMethod: paymentMethod || 'Pay on Pickup',
+          paymentStatus: paymentStatus || (paymentMethod && !paymentMethod.toLowerCase().includes('pickup') ? 'Paid Online' : 'Pay at Counter'),
+          transactionRef: transactionRef || o.id
+        };
+      });
     }
   } catch (e) {
     console.warn('Supabase fetch orders failed, falling back to local storage:', e.message || e);
@@ -121,6 +140,22 @@ async function dbInsertOrder(order) {
       status: order.status || 'Pending',
       time: order.time
     };
+
+    // If payment fields provided, try inserting with columns
+    if (order.paymentMethod || order.transactionRef) {
+      try {
+        const fullPayload = {
+          ...payload,
+          payment_method: order.paymentMethod || 'Pay on Pickup',
+          payment_status: order.paymentStatus || 'Pending',
+          transaction_ref: order.transactionRef || order.id
+        };
+        const { data: pData, error: pError } = await client.from('orders').insert([fullPayload]);
+        if (!pError) return true;
+      } catch (colErr) {
+        // Fall through to standard payload without extra columns
+      }
+    }
     
     const { data, error } = await client.from('orders').insert([payload]);
     if (error) throw error;
@@ -477,3 +512,4 @@ window.AuraDB = {
   insertReview: dbInsertReview,
   deleteReview: dbDeleteReview
 };
+

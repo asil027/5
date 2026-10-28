@@ -507,6 +507,57 @@ button, input, select {
   color: var(--text-dim);
 }
 
+/* Payment Method Badges in Admin Order Rows */
+.pay-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  margin-top: 0.25rem;
+  letter-spacing: 0.3px;
+}
+
+.pay-badge.pay-card {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.pay-badge.pay-jazzcash {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.pay-badge.pay-easypaisa {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.pay-badge.pay-raast {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.35);
+}
+
+.pay-badge.pay-cod, .pay-badge.pay-cash {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.order-pay-ref {
+  display: block;
+  font-family: monospace;
+  font-size: 0.72rem;
+  color: var(--gold-light);
+  margin-top: 0.15rem;
+}
+
 /* Status Dropdown Select */
 .status-select {
   background: #140d08;

@@ -282,6 +282,13 @@
             <p><strong>Hotline:</strong> <span id="adminHotlineText">+92 300 1234567</span></p>
             <p><strong>Support Email:</strong> <span id="adminEmailText">info@auraroasters.com</span></p>
           </div>
+
+          <div class="settings-card">
+            <h4>💳 Online Payment & Wallets</h4>
+            <p><strong>JazzCash Till:</strong> <span id="adminJazzcashText">0300 1234567</span></p>
+            <p><strong>EasyPaisa:</strong> <span id="adminEasypaisaText">0345 1234567</span></p>
+            <p><strong>Bank/Raast:</strong> <span id="adminRaastText">03001234567</span></p>
+          </div>
         </div>
       </section>
 
@@ -323,6 +330,40 @@
             <div class="form-group">
               <label>Support & Order Email *</label>
               <input type="email" id="specEmail" placeholder="e.g. info@auraroasters.com" required>
+            </div>
+
+            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(212, 151, 70, 0.2);">
+              <h4 style="color: var(--gold-light); margin-bottom: 0.75rem; font-size: 0.95rem;">💳 Online Payment Accounts & Mobile Wallets</h4>
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label>JazzCash Till / Account Number *</label>
+                  <input type="text" id="specJazzcash" placeholder="e.g. 0300 1234567" required>
+                </div>
+                <div class="form-group">
+                  <label>EasyPaisa Account Number *</label>
+                  <input type="text" id="specEasypaisa" placeholder="e.g. 0345 1234567" required>
+                </div>
+              </div>
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label>Bank Name *</label>
+                  <input type="text" id="specBankName" placeholder="e.g. Meezan Bank Ltd" required>
+                </div>
+                <div class="form-group">
+                  <label>Account Title *</label>
+                  <input type="text" id="specBankTitle" placeholder="e.g. AURA Coffee Roasters" required>
+                </div>
+              </div>
+              <div class="form-row-2">
+                <div class="form-group">
+                  <label>Bank IBAN *</label>
+                  <input type="text" id="specBankIban" placeholder="e.g. PK36MEZN00012345678901" required>
+                </div>
+                <div class="form-group">
+                  <label>Raast ID (Phone or IBAN) *</label>
+                  <input type="text" id="specBankRaast" placeholder="e.g. 03001234567" required>
+                </div>
+              </div>
             </div>
 
             <div class="modal-actions" style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
