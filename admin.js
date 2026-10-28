@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCafeSpecsManager();
   initCustomerInquiriesManager();
   initCustomerReviewsManager();
+  initSupabaseModal();
 });
 
 /* 1. Live Admin Clock */
@@ -48,12 +49,22 @@ function initOrdersManager() {
 
   async function fetchOrders() {
     let apiOrders = null;
-    try {
-      const res = await fetch('/api/orders');
-      if (res.ok) {
-        apiOrders = await res.json();
-      }
-    } catch (e) {}
+    if (window.AuraDB) {
+      try {
+        const dbOrders = await window.AuraDB.fetchOrders(null);
+        if (dbOrders && Array.isArray(dbOrders) && dbOrders.length > 0) {
+          apiOrders = dbOrders;
+        }
+      } catch (err) {}
+    }
+    if (!apiOrders) {
+      try {
+        const res = await fetch('/api/orders');
+        if (res.ok) {
+          apiOrders = await res.json();
+        }
+      } catch (e) {}
+    }
 
     let localOrders = null;
     try {
@@ -271,6 +282,9 @@ function initOrdersManager() {
       updateKPIs();
       renderOrders();
     }
+    if (window.AuraDB) {
+      window.AuraDB.updateOrderStatus(id, status).catch(() => {});
+    }
     try {
       await fetch(`/api/orders/${id}`, {
         method: 'PATCH',
@@ -392,6 +406,17 @@ function initMenuManager() {
   }
 
   async function fetchMenu() {
+    if (window.AuraDB) {
+      try {
+        const dbItems = await window.AuraDB.fetchMenu(null);
+        if (dbItems && Array.isArray(dbItems) && dbItems.length > 0) {
+          menuList = dbItems;
+          persistMenu();
+          renderMenu();
+          return;
+        }
+      } catch (err) {}
+    }
     try {
       const res = await fetch('/api/menu');
       if (res.ok) {
@@ -501,6 +526,9 @@ function initMenuManager() {
       Object.assign(target, updates);
       persistMenu();
     }
+    if (window.AuraDB) {
+      window.AuraDB.updateMenuItem(id, updates).catch(() => {});
+    }
     try {
       await fetch(`/api/menu/${id}`, {
         method: 'PATCH',
@@ -517,6 +545,9 @@ function initMenuManager() {
     persistMenu();
     renderMenu();
 
+    if (window.AuraDB) {
+      window.AuraDB.deleteMenuItem(id).catch(() => {});
+    }
     try {
       await fetch(`/api/menu/${id}`, { method: 'DELETE' });
     } catch (e) {
@@ -598,6 +629,10 @@ function initMenuManager() {
         }
       } catch (err) {
         console.warn('API add failed, saving locally:', err);
+      }
+
+      if (window.AuraDB) {
+        window.AuraDB.insertMenuItem(newDrink).catch(() => {});
       }
 
       menuList.push(newDrink);
@@ -717,6 +752,9 @@ function initCafeSpecsManager() {
         email: inputEmail.value.trim() || DEFAULT_SPECS.email
       };
       localStorage.setItem('aura_cafe_settings', JSON.stringify(updated));
+      if (window.AuraDB) {
+        window.AuraDB.saveCafeSettings(updated).catch(() => {});
+      }
       window.dispatchEvent(new CustomEvent('aura_settings_updated', { detail: updated }));
       renderSpecs();
       closeModal();
@@ -727,6 +765,15 @@ function initCafeSpecsManager() {
   window.addEventListener('storage', (e) => {
     if (e.key === 'aura_cafe_settings') renderSpecs();
   });
+
+  if (window.AuraDB) {
+    window.AuraDB.fetchCafeSettings(DEFAULT_SPECS).then(s => {
+      if (s) {
+        localStorage.setItem('aura_cafe_settings', JSON.stringify(s));
+        renderSpecs();
+      }
+    }).catch(() => {});
+  }
 
   renderSpecs();
 }
@@ -824,8 +871,12 @@ function initCustomerInquiriesManager() {
         const input = container.querySelector(`.inquiry-reply-input[data-idx="${idx}"]`);
         if (input && input.value.trim()) {
           const list = getInquiries();
-          list[idx].reply = input.value.trim();
+          const targetInq = list[idx];
+          targetInq.reply = input.value.trim();
           saveInquiries(list);
+          if (window.AuraDB && targetInq.id) {
+            window.AuraDB.updateInquiryReply(targetInq.id, targetInq.reply).catch(() => {});
+          }
           renderInquiries();
         }
       });
@@ -835,8 +886,11 @@ function initCustomerInquiriesManager() {
       btn.addEventListener('click', () => {
         const idx = parseInt(btn.getAttribute('data-idx'), 10);
         const list = getInquiries();
-        list.splice(idx, 1);
+        const removed = list.splice(idx, 1);
         saveInquiries(list);
+        if (window.AuraDB && removed[0] && removed[0].id) {
+          window.AuraDB.deleteInquiry(removed[0].id).catch(() => {});
+        }
         renderInquiries();
       });
     });
@@ -847,6 +901,15 @@ function initCustomerInquiriesManager() {
     if (e.key === 'aura_customer_chats') renderInquiries();
   });
   window.addEventListener('aura_chats_updated', renderInquiries);
+
+  if (window.AuraDB) {
+    window.AuraDB.fetchInquiries(DEFAULT_INQUIRIES).then(inqs => {
+      if (inqs && inqs.length > 0) {
+        localStorage.setItem('aura_customer_chats', JSON.stringify(inqs));
+        renderInquiries();
+      }
+    }).catch(() => {});
+  }
 
   renderInquiries();
 }
@@ -947,8 +1010,11 @@ function initCustomerReviewsManager() {
         const idx = parseInt(btn.getAttribute('data-idx'), 10);
         if (confirm('Delete this customer review?')) {
           const list = getReviews();
-          list.splice(idx, 1);
+          const removed = list.splice(idx, 1);
           saveReviews(list);
+          if (window.AuraDB && removed[0] && removed[0].id) {
+            window.AuraDB.deleteReview(removed[0].id).catch(() => {});
+          }
           renderReviews();
         }
       });
@@ -960,7 +1026,127 @@ function initCustomerReviewsManager() {
   });
   window.addEventListener('aura_reviews_updated', renderReviews);
 
+  if (window.AuraDB) {
+    window.AuraDB.fetchReviews(DEFAULT_REVIEWS).then(revs => {
+      if (revs && revs.length > 0) {
+        localStorage.setItem('aura_customer_reviews', JSON.stringify(revs));
+        renderReviews();
+      }
+    }).catch(() => {});
+  }
+
   renderReviews();
+}
+
+/* 8. Supabase Database Connection Modal & Status */
+function initSupabaseModal() {
+  const modal = document.getElementById('supabaseConfigModal');
+  const openBtn = document.getElementById('openSupabaseModalBtn');
+  const closeBtn = document.getElementById('closeSupabaseModalBtn');
+  const cancelBtn = document.getElementById('cancelSupabaseBtn');
+  const form = document.getElementById('supabaseConfigForm');
+  const urlInput = document.getElementById('inputSupabaseUrl');
+  const keyInput = document.getElementById('inputSupabaseKey');
+  const testBtn = document.getElementById('btnTestSupabase');
+  const testResult = document.getElementById('supabaseTestResult');
+  const statusDot = document.getElementById('supabaseStatusDot');
+  const statusText = document.getElementById('supabaseStatusText');
+
+  async function updateBadge() {
+    if (!window.AuraDB) return;
+    const creds = window.AuraDB.getConfig();
+    if (!creds.isConfigured) {
+      if (statusDot) statusDot.style.background = '#9ca3af';
+      if (statusText) statusText.textContent = 'Supabase: Setup';
+      return;
+    }
+    const res = await window.AuraDB.checkConnection();
+    if (res.connected) {
+      if (statusDot) statusDot.style.background = '#10b981';
+      if (statusText) statusText.textContent = 'Supabase: Connected 🟢';
+    } else {
+      if (statusDot) statusDot.style.background = '#f59e0b';
+      if (statusText) statusText.textContent = 'Supabase: Check DB ⚠️';
+    }
+  }
+
+  function populate() {
+    if (!window.AuraDB) return;
+    const creds = window.AuraDB.getConfig();
+    if (urlInput && creds.url && creds.url !== 'https://YOUR_PROJECT_ID.supabase.co') {
+      urlInput.value = creds.url;
+    }
+    if (keyInput && creds.key && creds.key !== 'YOUR_SUPABASE_ANON_KEY') {
+      keyInput.value = creds.key;
+    }
+    if (testResult) testResult.style.display = 'none';
+  }
+
+  if (openBtn && modal) {
+    openBtn.addEventListener('click', () => {
+      populate();
+      modal.showModal();
+    });
+  }
+
+  function closeModal() {
+    if (modal) modal.close();
+  }
+
+  if (closeBtn) closeBtn.addEventListener('click', closeModal);
+  if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+  if (testBtn) {
+    testBtn.addEventListener('click', async () => {
+      const url = urlInput ? urlInput.value.trim() : '';
+      const key = keyInput ? keyInput.value.trim() : '';
+      if (!url || !key) {
+        if (testResult) {
+          testResult.style.display = 'block';
+          testResult.style.background = 'rgba(239, 68, 68, 0.15)';
+          testResult.style.color = '#f87171';
+          testResult.textContent = '⚠️ Please enter both Project URL and Anon/Publishable Key first.';
+        }
+        return;
+      }
+      if (window.AuraDB) window.AuraDB.setCredentials(url, key);
+      if (testResult) {
+        testResult.style.display = 'block';
+        testResult.style.background = 'rgba(255, 255, 255, 0.05)';
+        testResult.style.color = '#e5e7eb';
+        testResult.textContent = '⏳ Testing connection to Supabase database...';
+      }
+      const res = await window.AuraDB.checkConnection();
+      if (res.connected) {
+        testResult.style.background = 'rgba(16, 185, 129, 0.15)';
+        testResult.style.color = '#10b981';
+        testResult.textContent = '✓ Successfully connected to Supabase database tables!';
+        updateBadge();
+      } else {
+        testResult.style.background = 'rgba(239, 68, 68, 0.15)';
+        testResult.style.color = '#f87171';
+        testResult.textContent = '❌ Connection failed: ' + res.reason + ' (Ensure supabase_schema.sql was run in SQL Editor)';
+        updateBadge();
+      }
+    });
+  }
+
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const url = urlInput ? urlInput.value.trim() : '';
+      const key = keyInput ? keyInput.value.trim() : '';
+      if (window.AuraDB) {
+        window.AuraDB.setCredentials(url, key);
+      }
+      closeModal();
+      await updateBadge();
+      alert('✓ Supabase credentials saved! Syncing data...');
+      location.reload();
+    });
+  }
+
+  updateBadge();
 }
 
 function escapeHtml(str) {

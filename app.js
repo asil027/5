@@ -334,6 +334,11 @@ function initOrderModal() {
     // 2. Dispatch cross-tab and in-window events
     window.dispatchEvent(new CustomEvent('aura_order_placed', { detail: fullOrder }));
 
+    // 2b. Sync to Supabase Cloud Database
+    if (window.AuraDB) {
+      window.AuraDB.insertOrder(fullOrder).catch(() => {});
+    }
+
     // 3. Sync to Backend Server API
     try {
       await fetch('/api/orders', {
@@ -513,6 +518,18 @@ function initDynamicMenu() {
   if (!menuGrid) return;
 
   async function loadMenuData() {
+    if (window.AuraDB) {
+      try {
+        const dbItems = await window.AuraDB.fetchMenu(null);
+        if (dbItems && Array.isArray(dbItems) && dbItems.length > 0) {
+          currentMenuList = dbItems;
+          localStorage.setItem('aura_menu', JSON.stringify(currentMenuList));
+          renderMenuCards();
+          updateOrderSelectDropdown(currentMenuList);
+          return;
+        }
+      } catch (err) {}
+    }
     try {
       const res = await fetch('/api/menu');
       if (res.ok) {
@@ -1090,6 +1107,15 @@ function initCafeSettingsSync() {
   });
   window.addEventListener('aura_settings_updated', applySettings);
 
+  if (window.AuraDB) {
+    window.AuraDB.fetchCafeSettings(DEFAULT_CAFE_SPECS).then(s => {
+      if (s) {
+        localStorage.setItem('aura_cafe_settings', JSON.stringify(s));
+        applySettings();
+      }
+    }).catch(() => {});
+  }
+
   applySettings();
 }
 
@@ -1269,6 +1295,9 @@ function initCustomerReviews() {
       const reviews = getReviews();
       reviews.unshift(newReview);
       localStorage.setItem('aura_customer_reviews', JSON.stringify(reviews));
+      if (window.AuraDB) {
+        window.AuraDB.insertReview(newReview).catch(() => {});
+      }
       window.dispatchEvent(new CustomEvent('aura_reviews_updated', { detail: reviews }));
 
       renderReviews();
@@ -1281,6 +1310,15 @@ function initCustomerReviews() {
     if (e.key === 'aura_customer_reviews') renderReviews();
   });
   window.addEventListener('aura_reviews_updated', renderReviews);
+
+  if (window.AuraDB) {
+    window.AuraDB.fetchReviews(SEED_REVIEWS).then(revs => {
+      if (revs && revs.length) {
+        localStorage.setItem('aura_customer_reviews', JSON.stringify(revs));
+        renderReviews();
+      }
+    }).catch(() => {});
+  }
 
   renderReviews();
 }
@@ -1406,6 +1444,9 @@ function initCustomerLiveChat() {
       const chats = getChats();
       chats.push(newInquiry);
       localStorage.setItem('aura_customer_chats', JSON.stringify(chats));
+      if (window.AuraDB) {
+        window.AuraDB.insertInquiry(newInquiry).catch(() => {});
+      }
       window.dispatchEvent(new CustomEvent('aura_chats_updated', { detail: chats }));
 
       msgInput.value = '';
@@ -1426,4 +1467,13 @@ function initCustomerLiveChat() {
     if (e.key === 'aura_customer_chats') renderChatMessages();
   });
   window.addEventListener('aura_chats_updated', renderChatMessages);
+
+  if (window.AuraDB) {
+    window.AuraDB.fetchInquiries([]).then(inqs => {
+      if (inqs && inqs.length) {
+        localStorage.setItem('aura_customer_chats', JSON.stringify(inqs));
+        renderChatMessages();
+      }
+    }).catch(() => {});
+  }
 }
